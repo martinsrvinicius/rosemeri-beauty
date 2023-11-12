@@ -79,8 +79,8 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  //history: createWebHistory(import.meta.env.BASE_URL),
-  history: createWebHistory('/'),
+  history: createWebHistory(import.meta.env.BASE_URL),
+  // history: createWebHistory('/'),
 
   //  mode: process.env.VUE_APP_ROUTER_MODE_HISTORY === 'true' ? 'history' : 'hash',
   routes,
