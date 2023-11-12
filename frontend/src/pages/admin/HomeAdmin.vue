@@ -7,23 +7,22 @@
 </template>
 
 <script setup>
-import axios from 'axios';
-import { onMounted, ref } from 'vue';
-import { API_PATH } from '../../stores/global-store';
+  import axios from 'axios'
+  import { onMounted, ref } from 'vue'
+  import { API_PATH } from '../../stores/global-store'
 
-const items = ref()
+  const items = ref()
 
-onMounted(()=> {
-testAPI()
-})
+  onMounted(() => {
+    testAPI()
+  })
 
-async function testAPI() {
-  await axios('https://vinim.eu/api/read_single.php?id=4')
-  .then((res)=> {
-    console.log("request API teste: ", res.data)
-    items.value = res.data
-  }).catch()
-}
-
-
+  async function testAPI() {
+    await axios('https://vinim.eu/api/read_single.php?id=4')
+      .then((res) => {
+        console.log('request API teste: ', res.data)
+        items.value = res.data
+      })
+      .catch()
+  }
 </script>
