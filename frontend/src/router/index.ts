@@ -79,10 +79,10 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  // history: createWebHistory('/'),
+  // history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory('/rosemeri_beauty/frontend/dist/'),
 
-  //  mode: process.env.VUE_APP_ROUTER_MODE_HISTORY === 'true' ? 'history' : 'hash',
+  // mode: process.env.VUE_APP_ROUTER_MODE_HISTORY === 'true' ? 'history' : 'hash',
   routes,
 })
 
