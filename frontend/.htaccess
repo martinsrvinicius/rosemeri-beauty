@@ -4,9 +4,9 @@ Options -MultiViews
 
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteBase /rosemeri_beauty/frontend/dist/
-RewriteRule ^rosemeri_beauty/frontend/dist/index\.html$ - [L]
+RewriteBase /frontend/dist/
+RewriteRule ^frontend/dist/index\.html$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /rosemeri_beauty/frontend/dist/index.html [L]
+RewriteRule . /frontend/dist/index.html [L]
 </IfModule>
