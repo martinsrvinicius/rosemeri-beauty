@@ -18,7 +18,7 @@ export default defineConfig({
       include: resolve(dirname(fileURLToPath(import.meta.url)), './src/i18n/locales/**'),
     }),
   ],
-  base: '/frontend/rosemeri-beauty/dist/',
+  base: '/frontend/dist/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('.src', import.meta.url)),
