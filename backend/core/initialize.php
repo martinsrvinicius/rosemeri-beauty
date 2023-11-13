@@ -12,10 +12,12 @@
  //load the config file first
 // require_once(INC_PATH.DS."config.php");
 //require_once('../includes/config.php');
-require_once('/home/u239364416/domains/vinim.eu/public_html/includes/config.php');
+require_once($_SERVER["DOCUMENT_ROOT"].'/includes/config.php');
  
 //require_once('/home/vol19_2/infinityfree.com/if0_35370468/htdocs/includes/config.php');
  //core classes
 //require_once("../core/post.php");
-require_once("/home/u239364416/domains/vinim.eu/public_html/core/post.php");
+//require_once("/home/u239364416/domains/vinim.eu/public_html/rosemeri-beauty/core/post.php");
+require_once($_SERVER["DOCUMENT_ROOT"].'/core/user.php');
+require_once($_SERVER["DOCUMENT_ROOT"].'/core/post.php');
 ?>

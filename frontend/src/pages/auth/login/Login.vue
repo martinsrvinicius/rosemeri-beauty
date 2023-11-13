@@ -63,21 +63,26 @@
 
   function onLogin() {
     data.append('email', email.value)
-    data.append('password', password.value)
+    data.append('pass', password.value)
     new Response(data).text().then(console.log)
 
     axios
-      .post(API_PATH + '/api/login_api.php?action=login', data)
+      .post(API_PATH + '/api/users/login.php?action=login', data)
       .then((res) => {
-        console.log('data', res.data)
+        console.log('data', res.data.username)
+        if (res.data.adm == 1) {
+          router.push({ name: 'page-1' })
+        } else {
+          router.push({ name: 'home-user' })
+        }
 
-        if (res.data.error) {
+       /* if (res.data.error) {
           console.log('Error', res.data.error)
           alert('O Email e/ou a Palavra-Passe estão incorretos. Tente novamente.')
         } else {
-          getCurrentUser(data)
+          //getCurrentUser(data)
           console.log('Success', res.data)
-        }
+        }*/
       })
       .catch((error) => {
         console.log('Error')

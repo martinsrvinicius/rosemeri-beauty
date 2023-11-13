@@ -20,4 +20,4 @@ export const useGlobalStore = defineStore('global', {
   },
 })
 
-export const API_PATH = 'http://localhost/rosemeri_beauty/backend'
+export const API_PATH = 'https://rosemeri-beauty.vinim.eu'

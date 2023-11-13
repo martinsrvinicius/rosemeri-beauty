@@ -3,9 +3,9 @@
  * Database connection
  */
 
-$db_user = 'u239364416_vinim';
+$db_user = 'u239364416_rose';
 $db_password = 'Rosevini280112#';
-$db_name = 'u239364416_phprest';
+$db_name = 'u239364416_rosemeribeauty';
 
 $db = new PDO('mysql:host=127.0.0.1;dbname='.$db_name.';charset=utf8', $db_user, $db_password);
 
