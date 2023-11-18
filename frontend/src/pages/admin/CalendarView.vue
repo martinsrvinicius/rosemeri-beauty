@@ -33,7 +33,6 @@
               v-model="state.newItemClientName"
               label="Nome do Cliente"
               :options="optionsClient"
-              autocomplete
               :track-by="(option: any) => option.id"
               placeholder="Selecione um cliente"
               allow-create="unique"
@@ -884,14 +883,31 @@ state.items = [...state.items, { ...obj }]*/
   }
 
   async function insertNewClient(option: any) {
-    var data = new FormData()
-    data.append('id', option.id)
-    data.append('name', option.text)
+    let data = JSON.stringify({
+      name: option.text,
+    })
+
     await axios
-      .post(API_PATH + '/src/api/client_api.php?action=addNewClient', data)
+      .request({
+        url: 'https://rosemeri-beauty.vinim.eu/api/clients/create_client.php',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        method: 'POST',
+        maxBodyLength: Infinity,
+        data: data,
+      })
       .then((res) => {
         console.log('INSERT NEW: ', res.data)
-        getCalendar()
+        if (res.data) {
+          let msg = 'Cliente adicionado com sucesso'
+          let color = '#008000'
+          notify(msg, color)
+        } else {
+          let msg = 'Cliente não adicionado'
+          let color = '#ff0000'
+          notify(msg, color)
+        }
       })
       .catch((error) => {
         console.log('Erro: ', error)
