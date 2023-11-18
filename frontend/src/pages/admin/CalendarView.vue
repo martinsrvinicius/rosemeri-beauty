@@ -327,7 +327,9 @@
   import { API_PATH } from '../../stores/global-store'
   import { StringDecoder } from 'string_decoder'
   import emailjs from '@emailjs/browser'
+  import { useToast } from 'vuestic-ui'
 
+  const { init: initToast } = useToast()
   const colDelete = ref()
   const colEdit = ref()
   const showEdit = ref()
@@ -402,8 +404,8 @@
 
   const optionsClient = ref([
     {
-      id: 1,
-      text: 'Vinicius',
+      id: 0,
+      text: '',
     },
   ])
 
@@ -429,53 +431,6 @@
   function addNew() {
     showModalNew.value = !showModalNew.value
   }
-
-  //INSERT NEW CLIENT INTO DATABASE
-  function addNewClient(newOption: any) {
-    console.log('CLIENT: ', newOption)
-
-    const option = {
-      id: optionsClient.value.length,
-      text: String(newOption),
-      //value: newOption,
-    }
-    insertNewClient(option)
-    optionsClient.value = [...optionsClient.value, option]
-  }
-
-  function insertNewClient(option: any) {
-    var data = new FormData()
-    data.append('id', option.id)
-    data.append('name', option.text)
-    axios
-      .post(API_PATH + '/src/api/client_api.php?action=addNewClient', data)
-      .then((res) => {
-        console.log('INSERT NEW: ', res.data)
-        getCalendar()
-      })
-      .catch((error) => {
-        console.log('Erro: ', error)
-      })
-  }
-  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-  //INSERT NEW SERVICE INTO DATABASE
-  function addNewService(newOption: any) {
-    console.log('SERVICE: ', newOption)
-
-    const option = {
-      id: optionsClient.value.length,
-      text: String(newOption),
-      //value: newOption,
-    }
-    //  insertNewClient(option)
-    optionsClient.value = [...optionsClient.value, option]
-  }
-
-  function addNewSchedule() {
-    console.log('Agendamento: ', clientName.value, service.value, serviceDate.value, serviceTime.value)
-  }
-  //<<<<<<<<<<<<<<<<<<<<<<<<<
 
   function formatFn() {
     d.value = date.value.toLocaleDateString('pt-PT', { year: 'numeric', month: '2-digit', day: '2-digit' })
@@ -526,36 +481,8 @@
       data: data,
       uniqueId: uniqueId,
     }
-    findClientByMatricula(obj)
+    //findClientByMatricula(obj)
     //console.log("OBJ: ", obj)
-  }
-
-  function findClientByMatricula(obj: any) {
-    var data = new FormData()
-    var email = ''
-    data.append('matricula', obj.matricula)
-    axios
-      .post(API_PATH + '/src/api/calendar_api.php?action=getClientByMatricula', data)
-      .then((res) => {
-        console.log('EMAIL RES: ', res.data.email[0].email)
-        templateParams.value = {
-          subject: obj.title,
-          message: `O agendamento foi confirmado com sucesso!`,
-          send_to: res.data.email[0].email,
-          to_name: obj.title,
-          from_name: 'Equipa Motoboxe',
-          from_email: 'viniciusm@dv-ti.com',
-          date: obj.data,
-          matricula: obj.matricula,
-          marca: obj.marca,
-          modelo: obj.modelo,
-          reply_to: '',
-        }
-      })
-      .catch((error) => {
-        console.log('Erro: ', error)
-      })
-    return email
   }
 
   function sendEmail() {
@@ -588,23 +515,11 @@
 
   function getCalendar() {
     axios
-      .get(API_PATH + '/src/api/calendar_api.php?action=getCalendar')
+      // .get(API_PATH + '/src/api/calendar_api.php?action=getCalendar')
+      .get('https://rosemeri-beauty.vinim.eu/api/calendar/read_calendar.php')
       .then((res) => {
         console.log('GET CALENDAR: ', res.data)
         fillCalendarItems(res.data.calendar)
-      })
-      .catch((error) => {
-        console.log('Erro: ', error)
-      })
-  }
-
-  function getClients() {
-    axios
-      .get(API_PATH + '/src/api/api.php?action=getClients')
-      .then((res) => {
-        clients.value = []
-        clients.value.push(res.data.clientes)
-        getCalendar()
       })
       .catch((error) => {
         console.log('Erro: ', error)
@@ -752,75 +667,7 @@
 id: "e0",
 startDate: "2018-01-05",
 },
-{
-id: "e1",
-startDate: thisMonth(15, 18, 30),
-},
-{
-id: "e2",
-startDate: thisMonth(15),
-title: "Single-day item with a long title",
-},
-{
-id: "e3",
-startDate: thisMonth(7, 9, 25),
-endDate: thisMonth(10, 16, 30),
-title: "Multi-day item with a long title and times",
-},
-{
-id: "e4",
-startDate: thisMonth(20),
-title: "My Birthday!",
-classes: "birthday",
-url: "https://en.wikipedia.org/wiki/Birthday",
-style:'background-color: red'
-},
-{
-id: "e5",
-startDate: thisMonth(5),
-endDate: thisMonth(12),
-title: "Multi-day item",
-classes: ['purple'],
-tooltip: "This spans multiple days",
-},
-{
-id: "foo",
-startDate: thisMonth(29),
-title: "Same day 1",
-},
-{
-id: "e6",
-startDate: thisMonth(29),
-title: "Same day 2",
-classes: "orange",
-},
-{
-id: "e7",
-startDate: thisMonth(29),
-title: "Same day 3",
-},
-{
-id: "e8",
-startDate: thisMonth(29),
-title: "Same day 4",
-classes: "orange",
-},
-{
-id: "e9",
-startDate: thisMonth(29),
-title: "Same day 5",
-},
-{
-id: "e10",
-startDate: thisMonth(29),
-title: "Same day 6",
-classes: "orange",
-},
-{
-id: "e11",
-startDate: thisMonth(29),
-title: "Same day 7",
-},*/
+*/
     ],
   } as IExampleState)
 
@@ -850,7 +697,7 @@ title: "Same day 7",
   }
 
   onMounted((): void => {
-    //getClients()
+    getClients()
     getCalendar()
 
     state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
@@ -863,6 +710,10 @@ title: "Same day 7",
     // you can listen for changes to the displayed range and react to them (by loading items, etc.)
     //console.log(eventSource)
     //console.log(range)
+    console.log('period: mudou')
+  }
+
+  const periodChanged2 = (range: any, eventSource: any) => {
     console.log('period: mudou')
   }
 
@@ -889,13 +740,21 @@ title: "Same day 7",
     //fillEmailParams(`${e.title}`, state.matricula, state.marca, state.modelo, state.data, state.id)
   }
 
-  function onDeleteItem(id: any) {
-    var data = new FormData()
-    data.append('uniqueId', id)
-    //new Response(data).text().then(console.log)
-
-    axios
-      .post(API_PATH + '/src/api/calendar_api.php?action=deleteItem', data)
+  //DELETE EVENTS ON CALENDAR
+  async function onDeleteItem(id: any) {
+    let data = JSON.stringify({
+      uniqueId: id,
+    })
+    await axios
+      .request({
+        url: 'https://rosemeri-beauty.vinim.eu/api/calendar/delete_event.php',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        method: 'post',
+        maxBodyLength: Infinity,
+        data: data,
+      })
       .then((res) => {
         console.log('DELETE: ', res.data)
         showModal.value = false
@@ -949,50 +808,21 @@ title: "Same day 7",
     }`
   }
 
-  const onDrop = (item: INormalizedCalendarItem, date: Date): void => {
-    state.message = `Você alterou '${item.title}' para ${date.toLocaleDateString()}`
-    // Determine the delta between the old start date and the date chosen,
-    // and apply that delta to both the start and end date to move the item.
-    const eLength = CalendarMath.dayDiff(item.startDate, date)
-    item.originalItem.startDate = CalendarMath.addDays(item.startDate, eLength)
-    item.originalItem.endDate = CalendarMath.addDays(item.endDate, eLength)
-    item.originalItem.style = 'background-color: #ffff66 '
-    updateDroppedItem(item.originalItem.id, item.originalItem.startDate)
-  }
-
-  function updateDroppedItem(uniqueId: string, dataHora: any) {
-    var d = new Date(dataHora)
-    var t = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
-    var data = new FormData()
-    data.append('uniqueId', uniqueId)
-    data.append('dataHora', String(t))
-    new Response(data).text().then(console.log)
-    axios
-      .post(API_PATH + '/src/api/calendar_api.php?action=updateDrop', data)
-      .then((res) => {
-        console.log('UPDATE: ', res.data.update)
-        getCalendar()
-      })
-      .catch((error) => {
-        console.log('Erro: ', error)
-      })
-  }
-
   const clickTestAddItem = (): void => {
     var t = time.value.getHours() + ':' + time.value.getMinutes()
     state.newItemEndDate = formatFn() + ' ' + t
     var date = new Date(state.newItemEndDate)
     /*state.items.push({
-  matricula: state.newItemMatricula,
-  modelo: state.newItemModelo,
-  marca: state.newItemMarca,
-  //startDate: CalendarMath.fromIsoStringToLocalDate(state.newItemStartDate),
-  //endDate: CalendarMath.fromIsoStringToLocalDate(state.newItemEndDate),
-  startDate: date,
-  endDate: date,
-  title: state.newItemTitle,
-  id: '',
-  //id: 'e' + Math.random().toString(36).substring(2, 11),
+matricula: state.newItemMatricula,
+modelo: state.newItemModelo,
+marca: state.newItemMarca,
+//startDate: CalendarMath.fromIsoStringToLocalDate(state.newItemStartDate),
+//endDate: CalendarMath.fromIsoStringToLocalDate(state.newItemEndDate),
+startDate: date,
+endDate: date,
+title: state.newItemTitle,
+id: '',
+//id: 'e' + Math.random().toString(36).substring(2, 11),
 })
 state.items = [...state.items, { ...obj }]*/
     var obj = {
@@ -1011,33 +841,168 @@ state.items = [...state.items, { ...obj }]*/
     state.message = 'Você adicionou um item no calendário!'
   }
 
-  function addManualItem(obj: any) {
-    var d = new Date(obj['startDate'])
-    var t = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
-    var data = new FormData()
-    //data.append('idCliente', obj['matricula'])
-    data.append('idCliente', obj.clientName.id)
-    data.append('idServico', obj.service[0].id)
-    data.append('dataHora', String(t))
-    new Response(data).text().then(console.log)
-    axios
-      .post(API_PATH + '/src/api/calendar_api.php?action=addNewItem', data)
+  //GET ALL CLIENTS
+  async function getClients() {
+    await axios
+      .request({
+        url: 'https://rosemeri-beauty.vinim.eu/api/clients/read_clients.php',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        method: 'GET',
+        maxBodyLength: Infinity,
+      })
       .then((res) => {
-        console.log('INSERT: ', res.data)
-        state.newItemTitle = ''
-        noContribuinte.value = ''
-        state.newItemMarca = ''
-        state.newItemModelo = ''
-        state.newItemMatricula = ''
-        state.newItemClientName = ''
-        state.newItemPhone = ''
-        state.newItemService = ''
+        //console.log("GET ALL CLIENTES: ", res.data.clients[0].client)
+        clients.value = []
+        clients.value.push(res.data.clients)
+        optionsClient.value = []
+        for (let i = 0; i < res.data.clients.length; i++) {
+          optionsClient.value.push({
+            id: res.data.clients[i].uniqueId,
+            text: res.data.clients[i].client,
+          })
+        }
         getCalendar()
       })
       .catch((error) => {
         console.log('Erro: ', error)
       })
   }
+
+  //INSERT NEW CLIENT INTO DATABASE
+  function addNewClient(newOption: any) {
+    console.log('NOVO CLIENTE: ', newOption)
+    const option = {
+      id: Number(optionsClient.value.length),
+      text: String(newOption),
+      //value: newOption,
+    }
+    insertNewClient(option)
+    optionsClient.value = [...optionsClient.value, option]
+  }
+
+  async function insertNewClient(option: any) {
+    var data = new FormData()
+    data.append('id', option.id)
+    data.append('name', option.text)
+    await axios
+      .post(API_PATH + '/src/api/client_api.php?action=addNewClient', data)
+      .then((res) => {
+        console.log('INSERT NEW: ', res.data)
+        getCalendar()
+      })
+      .catch((error) => {
+        console.log('Erro: ', error)
+      })
+  }
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  //INSERT NEW SERVICE INTO DATABASE
+  function addNewService(newOption: any) {
+    console.log('SERVICE: ', newOption)
+
+    const option = {
+      id: optionsClient.value.length,
+      text: String(newOption),
+      //value: newOption,
+    }
+    //  insertNewClient(option)
+    optionsClient.value = [...optionsClient.value, option]
+  }
+  //<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  //UPDATE EVENT DATE ON DROP
+  const onDrop = (item: INormalizedCalendarItem, date: Date): void => {
+    state.message = `Você alterou '${item.title}' para ${date.toLocaleDateString()}`
+    // Determine the delta between the old start date and the date chosen,
+    // and apply that delta to both the start and end date to move the item.
+    const eLength = CalendarMath.dayDiff(item.startDate, date)
+    item.originalItem.startDate = CalendarMath.addDays(item.startDate, eLength)
+    item.originalItem.endDate = CalendarMath.addDays(item.endDate, eLength)
+    item.originalItem.style = 'background-color: #ffff66 '
+    updateDroppedItem(item.originalItem.id, item.originalItem.startDate)
+  }
+
+  async function updateDroppedItem(uniqueId: string, dataHora: any) {
+    var d = new Date(dataHora)
+    var t = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
+    let data = JSON.stringify({
+      uniqueId: uniqueId,
+      dataHora: t,
+      confirm: 0,
+    })
+    await axios
+      .request({
+        url: 'https://rosemeri-beauty.vinim.eu/api/calendar/update_ondrop.php',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        method: 'POST',
+        maxBodyLength: Infinity,
+        data: data,
+      })
+      .then((res) => {
+        //console.log('UPDATE: ', res.data)
+        if (res.data) {
+          let msg = 'Agendamento alterado com sucesso'
+          let color = '#008000'
+          notify(msg, color)
+        } else {
+          let msg = 'Agendamento não alterado'
+          let color = '#ff0000'
+          notify(msg, color)
+        }
+        getCalendar()
+      })
+      .catch((error) => {
+        console.log('Erro: ', error)
+      })
+  }
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  //CREATE NEW EVENT ON CALENDAR
+  async function addManualItem(obj: any) {
+    var d = new Date(obj['startDate'])
+    var t = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
+
+    let data = JSON.stringify({
+      confirm: '0',
+      uniqueId: '0',
+      uniqueIdCliente: obj.clientName.id,
+      uniqueIdServico: obj.service[0].id,
+      dataHora: t,
+    })
+
+    await axios
+      .request({
+        url: 'https://rosemeri-beauty.vinim.eu/api/calendar/create_event.php',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        method: 'POST',
+        maxBodyLength: Infinity,
+        data: data,
+      })
+      .then((response) => {
+        console.log(JSON.stringify(response.data))
+        getCalendar()
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  //NOTIFY EVENT CHANGES
+  function notify(name: string, color: string) {
+    initToast({
+      message: `${name}`,
+      position: 'top-right',
+      color: color,
+    })
+  }
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 </script>
 <style scoped>
   @import 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css';
