@@ -22,5 +22,6 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/core/user.php');
 require_once($_SERVER["DOCUMENT_ROOT"].'/core/post.php');
 require_once($_SERVER["DOCUMENT_ROOT"].'/core/calendar.php');
 require_once($_SERVER["DOCUMENT_ROOT"].'/core/client.php');
+require_once($_SERVER["DOCUMENT_ROOT"].'/core/service.php');
 
 ?>
