@@ -76,7 +76,7 @@
           router.push({ name: 'home-user' })
         }
 
-       /* if (res.data.error) {
+        /* if (res.data.error) {
           console.log('Error', res.data.error)
           alert('O Email e/ou a Palavra-Passe estão incorretos. Tente novamente.')
         } else {

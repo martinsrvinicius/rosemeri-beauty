@@ -20,4 +20,7 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/includes/config.php');
 //require_once("/home/u239364416/domains/vinim.eu/public_html/rosemeri-beauty/core/post.php");
 require_once($_SERVER["DOCUMENT_ROOT"].'/core/user.php');
 require_once($_SERVER["DOCUMENT_ROOT"].'/core/post.php');
+require_once($_SERVER["DOCUMENT_ROOT"].'/core/calendar.php');
+require_once($_SERVER["DOCUMENT_ROOT"].'/core/client.php');
+
 ?>

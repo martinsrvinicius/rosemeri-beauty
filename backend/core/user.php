@@ -6,7 +6,7 @@ class User
     private $conn;
     private $table = 'users';
 
-    //post properties
+    //user properties
     public $uniqueId;
     public $name;
     public $username;
