@@ -698,6 +698,7 @@ startDate: "2018-01-05",
 
   onMounted((): void => {
     getClients()
+    getServices()
     getCalendar()
 
     state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
@@ -863,7 +864,7 @@ state.items = [...state.items, { ...obj }]*/
             text: res.data.clients[i].client,
           })
         }
-        getCalendar()
+        //getCalendar()
       })
       .catch((error) => {
         console.log('Erro: ', error)
@@ -897,6 +898,33 @@ state.items = [...state.items, { ...obj }]*/
       })
   }
   //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  //GET ALL CLIENTS
+  async function getServices() {
+    await axios
+      .request({
+        url: 'https://rosemeri-beauty.vinim.eu/api/service/read_service_list.php',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        method: 'GET',
+        maxBodyLength: Infinity,
+      })
+      .then((res) => {
+        // console.log("GET ALL SERVICES: ", res.data.service)
+        optionsService.value = []
+        for (let i = 0; i < res.data.service.length; i++) {
+          optionsService.value.push({
+            id: res.data.service[i].uniqueId,
+            text: res.data.service[i].titulo,
+          })
+        }
+        //getCalendar()
+      })
+      .catch((error) => {
+        console.log('Erro: ', error)
+      })
+  }
 
   //INSERT NEW SERVICE INTO DATABASE
   function addNewService(newOption: any) {
