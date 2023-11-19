@@ -32,5 +32,41 @@ class Service
         return $stmt;
     }
 
+
+     //Insert new service on option list
+     public function create_item_option($titulo)
+     {
+         //create query
+         $query = 'INSERT INTO `servico`(uniqueId, titulo) VALUES (:uniqueId, :titulo)';
+         //prepare statement
+         $stmt = $this->conn->prepare($query);
+         //clean data
+         $this->titulo = htmlspecialchars(strip_tags($titulo));
+         $this->uniqueId = htmlspecialchars(strip_tags($this->getUnique($titulo)));
+ 
+         //binding parameters
+         $stmt->bindParam(':uniqueId', $this->uniqueId);
+         $stmt->bindParam(':titulo', $titulo);
+ 
+         if ($stmt->execute()) {
+             return true;
+         }
+ 
+         //print error if something goes wrong
+         printf("Error %s \n", $stmt->error);
+         return false;
+     }
+ 
+     //Creates uniqueId 
+     public function getUnique($userName)
+     {
+         $ini = substr($userName, 0, 3);
+         $now = DateTime::createFromFormat('U.u', microtime(true));
+ 
+         $string = $ini . $now->format("YmdHis.u");
+ 
+         return $string;
+     }
+    
    
 }

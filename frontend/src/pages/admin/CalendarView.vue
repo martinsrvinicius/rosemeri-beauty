@@ -947,12 +947,44 @@ state.items = [...state.items, { ...obj }]*/
     console.log('SERVICE: ', newOption)
 
     const option = {
-      id: optionsClient.value.length,
+      id: optionsService.value.length,
       text: String(newOption),
       //value: newOption,
     }
-    //  insertNewClient(option)
-    optionsClient.value = [...optionsClient.value, option]
+    insertNewService(option)
+    optionsService.value = [...optionsService.value, option]
+  }
+
+  async function insertNewService(option: any) {
+    let data = JSON.stringify({
+      titulo: option.text,
+    })
+
+    await axios
+      .request({
+        url: 'https://rosemeri-beauty.vinim.eu/api/service/create_service.php',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        method: 'POST',
+        maxBodyLength: Infinity,
+        data: data,
+      })
+      .then((res) => {
+        console.log('INSERT NEW: ', res.data)
+        if (res.data) {
+          let msg = 'Serviço adicionado com sucesso'
+          let color = '#008000'
+          notify(msg, color)
+        } else {
+          let msg = 'Serviço não adicionado'
+          let color = '#ff0000'
+          notify(msg, color)
+        }
+      })
+      .catch((error) => {
+        console.log('Erro: ', error)
+      })
   }
   //<<<<<<<<<<<<<<<<<<<<<<<<<
 
