@@ -927,7 +927,7 @@ state.items = [...state.items, { ...obj }]*/
         maxBodyLength: Infinity,
       })
       .then((res) => {
-        // console.log("GET ALL SERVICES: ", res.data.service)
+        console.log('GET ALL SERVICES: ', res.data.service)
         optionsService.value = []
         for (let i = 0; i < res.data.service.length; i++) {
           optionsService.value.push({
@@ -1042,11 +1042,18 @@ state.items = [...state.items, { ...obj }]*/
     var d = new Date(obj['startDate'])
     var t = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
 
+    let serviceList = []
+    for (let i = 0; i < obj.service.length; i++) {
+      serviceList.push(obj.service[i].id)
+    }
+
+    //console.log("ADD NEW EVENT: ", serviceList)
+
     let data = JSON.stringify({
       confirm: '0',
       uniqueId: '0',
       uniqueIdCliente: obj.clientName.id,
-      uniqueIdServico: obj.service[0].id,
+      uniqueIdServico: serviceList,
       dataHora: t,
     })
 
@@ -1060,8 +1067,17 @@ state.items = [...state.items, { ...obj }]*/
         maxBodyLength: Infinity,
         data: data,
       })
-      .then((response) => {
-        console.log(JSON.stringify(response.data))
+      .then((res) => {
+        // console.log("create: ", res.data)
+        if (res.data.create[0]) {
+          let msg = 'Agendamento realizado com sucesso'
+          let color = '#008000'
+          notify(msg, color)
+        } else {
+          let msg = 'Agendamento não realizado'
+          let color = '#ff0000'
+          notify(msg, color)
+        }
         getCalendar()
       })
       .catch((error) => {

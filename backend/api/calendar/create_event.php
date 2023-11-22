@@ -15,16 +15,38 @@ $calendar = new Calendar($db);
 //get raw posted data
 $data = json_decode(file_get_contents('php://input'));
 
+/*
 $calendar->confirm = $data->confirm; 
 //$calendar->uniqueId = $data->uniqueId; 
 $calendar->uniqueIdCliente = $data->uniqueIdCliente; 
-$calendar->uniqueIdServico = $data->uniqueIdServico; 
+$calendar->uniqueIdServico = $data->uniqueIdServico[0]; 
 $calendar->dataHora = $data->dataHora; 
+*/
 
-echo json_encode($calendar);
 //create event on calendar
-if($calendar->create()) {
-    echo json_encode(array('message'=> 'Agendamento criado com sucesso'));
-} else {
-    echo json_encode(array('message'=> 'Não foi possível criar agendamento'));
+$obj = (object)[
+    'confirm' => null,
+    'uniqueIdCliente' => null,
+    'uniqueIdServico' => null,
+    'dataHora' => null,
+];
+$res['create'] = array();
+$status = null;
+for($i=0; $i < count($data->uniqueIdServico); $i++){
+    $obj->confirm = $data->confirm; 
+    $obj->uniqueIdCliente = $data->uniqueIdCliente; 
+    $obj->uniqueIdServico = $data->uniqueIdServico[$i]; 
+    $obj->dataHora = $data->dataHora; 
+    //echo json_encode($obj);
+    if($calendar->create_event($obj)) {
+        $status = true;
+        
+    } else {
+        $status = false;
+    }
 }
+
+array_push($res['create'], $status);
+echo json_encode($res);
+
+

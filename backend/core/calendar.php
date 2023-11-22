@@ -79,6 +79,35 @@ class Calendar
         return false;
     }
 
+    public function create_event($obj)
+    {
+        //create query
+        $query = 'INSERT INTO `agendamento`(confirm, uniqueId, uniqueIdCliente, uniqueIdServico, dataHora) VALUES (:confirm, :uniqueId, :uniqueIdCliente, :uniqueIdServico, :dataHora)';
+        //prepare statement
+        $stmt = $this->conn->prepare($query);
+        //clean data
+        $this->confirm = htmlspecialchars(strip_tags($obj->confirm));
+        $this->uniqueIdCliente = htmlspecialchars(strip_tags($obj->uniqueIdCliente));
+        $this->uniqueIdServico = htmlspecialchars(strip_tags($obj->uniqueIdServico));
+        $this->dataHora = htmlspecialchars(strip_tags(date('Y-m-d H:i:s', strtotime($obj->dataHora))));
+        $this->uniqueId = htmlspecialchars(strip_tags($this->getUnique($obj->dataHora)));
+
+        //binding parameters
+        $stmt->bindParam(':confirm', $this->confirm);
+        $stmt->bindParam(':uniqueId', $this->uniqueId);
+        $stmt->bindParam(':uniqueIdCliente', $this->uniqueIdCliente);
+        $stmt->bindParam(':uniqueIdServico', $this->uniqueIdServico);
+        $stmt->bindParam(':dataHora', $this->dataHora);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+
+        //print error if something goes wrong
+        printf("Error %s \n", $stmt->error);
+        return false;
+    }
+
 
     //Creates uniqueId 
     public function getUnique($userName)
