@@ -10,22 +10,26 @@
     <!--MODAL NOVO AGENDAMENTO-->
     <va-modal
       :mobile-fullscreen="false"
+      fullscreen
       v-model="showModalNew"
       cancelText="Cancelar"
       okText="Agendar"
       @ok="clickTestAddItem"
       class="myModal"
+      size="small"
     >
       <template #content="{ ok, cancel }">
-        <div class="new-container">
+        <div class="new-container box">
           <div class="header-container">
             <h1>Novo Agendamento</h1>
           </div>
 
           <div class="date-time-container">
             <va-date-input class="date" label="Data" :format="formatFn" v-model="date" stickToEdges></va-date-input>
+            <br />
             <va-time-input class="time" label="Hora" v-model="time"></va-time-input>
           </div>
+          <br />
 
           <div class="modal-container">
             <va-select
@@ -38,7 +42,8 @@
               allow-create="unique"
               @create-new="addNewClient"
             />
-
+            <br />
+            <br />
             <va-select
               class="input-select"
               v-model="state.newItemService"
@@ -53,8 +58,10 @@
           </div>
 
           <div class="btn-group">
-            <va-button class="btn-cancel" preset="plain" @click="cancel">Cancelar</va-button>
-            <va-button class="btn-save" @click="ok">Agendar</va-button>
+            <va-button class="btn-cancel" preset="plain" @click="cancel"
+              ><span style="font-size: 20px">Cancelar</span></va-button
+            >
+            <va-button class="btn-save" @click="ok"><span style="font-size: 20px">Agendar</span></va-button>
           </div>
         </div>
       </template>
@@ -71,85 +78,87 @@
     @ok="confirm(state.id)"
   >
     <template #content="{ ok, cancel }">
-      <div class="header-container-check">
-        <h1 class="title-modal">Agendamento</h1>
-        <div class="img-container" @click="showEdit = true">
-          <va-popover message="Editar">
-            <img class="update" src="../../assets/update.svg" alt="" />
-          </va-popover>
-        </div>
-      </div>
-
-      <div class="service">
-        <img class="img-service" src="../../assets/pestanas.jpg" alt="" />
-        <div style="width: 100%">
-          <div class="service-item-flex">
-            <p class="item-service">Serviço:</p>
-            <p class="item-service">{{ state.service }}</p>
-          </div>
-
-          <div class="service-item-flex">
-            <p class="item-service">Preço:</p>
-            <p class="item-service">€ {{ state.price }}</p>
-          </div>
-          <div class="service-item-flex">
-            <p class="item-service">Cliente:</p>
-            <p class="item-service">{{ state.client }}</p>
-          </div>
-          <div class="service-item-flex">
-            <p class="item-service">Data:</p>
-            <p class="item-service">{{ state.data }}</p>
+      <div class="new-container box">
+        <div class="header-container-check">
+          <h1 class="title-modal">Agendamento</h1>
+          <div class="img-container" @click="showEdit = true">
+            <va-popover message="Editar">
+              <img class="update" src="../../assets/update.svg" alt="" />
+            </va-popover>
           </div>
         </div>
-      </div>
 
-      <!--EDIT MODAL-->
-      <va-modal v-model="showEdit" okText="Guardar" cancelText="Cancelar" @ok="updateEvent()">
-        <template #content="{ ok, cancel }">
-          <div class="header-container-check" style="margin-bottom: 15px">
-            <h1 class="title-modal">Opções de Edição</h1>
+        <div class="service">
+          <img class="img-service" src="../../assets/pestanas.jpg" alt="" />
+          <div style="width: 100%">
+            <div class="service-item-flex">
+              <p class="item-service">Serviço:</p>
+              <p class="item-service">{{ state.service }}</p>
+            </div>
+
+            <div class="service-item-flex">
+              <p class="item-service">Preço:</p>
+              <p class="item-service">€ {{ state.price }}</p>
+            </div>
+            <div class="service-item-flex">
+              <p class="item-service">Cliente:</p>
+              <p class="item-service">{{ state.client }}</p>
+            </div>
+            <div class="service-item-flex">
+              <p class="item-service">Data:</p>
+              <p class="item-service">{{ state.data }}</p>
+            </div>
           </div>
+        </div>
 
-          <div class="edit-modal">
-            <va-collapse
-              class="min-w-96"
-              header="Editar Agendamento"
-              color="primary"
-              v-model="colDelete"
-              @click="colEdit = false"
-            >
-              <div class="collapse">
-                <va-date-picker v-model="serviceDate" class="col-date" label="Editar Data"></va-date-picker>
-                <va-time-picker class="col-time" v-model="serviceTime"></va-time-picker>
-              </div>
-            </va-collapse>
+        <!--EDIT MODAL-->
+        <va-modal v-model="showEdit" okText="Guardar" cancelText="Cancelar" @ok="updateEvent()">
+          <template #content="{ ok, cancel }">
+            <div class="header-container-check" style="margin-bottom: 15px">
+              <h1 class="title-modal">Opções de Edição</h1>
+            </div>
 
-            <va-collapse
-              class="min-w-96"
-              header="Eliminar Agendamento"
-              v-model="colEdit"
-              color="#ffff"
-              @click="colDelete = false"
-            >
-              <!--CANCELAR EVENTO-->
-              <div class="delete-col">
-                <p class="p-delete">Tem certeza que deseja eliminar o agendamento?</p>
+            <div class="edit-modal">
+              <va-collapse
+                class="min-w-96"
+                header="Editar Agendamento"
+                color="primary"
+                v-model="colDelete"
+                @click="colEdit = false"
+              >
+                <div class="collapse">
+                  <va-date-picker v-model="serviceDate" class="col-date" label="Editar Data"></va-date-picker>
+                  <va-time-picker class="col-time" v-model="serviceTime"></va-time-picker>
+                </div>
+              </va-collapse>
 
-                <va-button color="#434343" class="btn-delete" @click="onDeleteItem(state.id)">Eliminar</va-button>
-              </div>
-            </va-collapse>
-          </div>
-          <div class="btn-option">
-            <va-button preset="plain" class="btn-cancel" @click="cancel">Cancelar</va-button>
-            <va-button class="btn-guardar" @click="ok" :disabled="invalidDate">Guardar</va-button>
-          </div>
-        </template>
-      </va-modal>
+              <va-collapse
+                class="min-w-96"
+                header="Eliminar Agendamento"
+                v-model="colEdit"
+                color="#ffff"
+                @click="colDelete = false"
+              >
+                <!--CANCELAR EVENTO-->
+                <div class="delete-col">
+                  <p class="p-delete">Tem certeza que deseja eliminar o agendamento?</p>
 
-      <!--BOTÃO DE CONFIRMAÇÃO-->
-      <div class="btn-group">
-        <va-button class="btn-cancel" preset="plain" @click="cancel">Cancelar</va-button>
-        <va-button class="btn-save" @click="ok">Confirmar</va-button>
+                  <va-button color="#434343" class="btn-delete" @click="onDeleteItem(state.id)">Eliminar</va-button>
+                </div>
+              </va-collapse>
+            </div>
+            <div class="btn-option">
+              <va-button preset="plain" class="btn-cancel" @click="cancel">Cancelar</va-button>
+              <va-button class="btn-guardar" @click="ok" :disabled="invalidDate">Guardar</va-button>
+            </div>
+          </template>
+        </va-modal>
+
+        <!--BOTÃO DE CONFIRMAÇÃO-->
+        <div class="btn-group">
+          <va-button class="btn-cancel" preset="plain" @click="cancel">Cancelar</va-button>
+          <va-button class="btn-save" @click="ok">Confirmar</va-button>
+        </div>
       </div>
     </template>
   </va-modal>
@@ -181,98 +190,81 @@
   <!--FIM MODAL CLICK ITEM-->
 
   <!--CALENDAR CONFIG-->
-  <va-modal v-model="showConfig" okText="Encerrar" cancelText="">
-    <div class="calendar-controls">
-      <div class="box">
-        <h4 class="title is-5">Opções do Menu</h4>
-
-        <div class="field">
-          <!-- <label class="label">Período</label>-->
-          <div class="control">
-            <div class="">
-              <!-- <select v-model="state.displayPeriodUom">-->
-              <!--<select v-model="value">
-                <option>Mês</option>
-                <option>Semana</option>
-                <option>Ano</option>
-              </select>-->
-              <va-select label="Período" v-model="value" :options="periodOpt"> </va-select>
+  <va-modal v-model="showConfig" okText="Encerrar" cancelText="" size="small" fullscreen>
+    <template #content="{ ok }">
+      <div class="calendar-controls">
+        <div class="box">
+          <h4 class="title is-5">Opções do Menu</h4>
+          <div class="field2">
+            <div class="control">
+              <div class="">
+                <va-select label="Período" v-model="value" :options="periodOpt"> </va-select>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="field">
-          <!--<label class="label">Contagem do Período</label>-->
-          <div class="control">
-            <div class="">
-              <!--<select v-model="state.displayPeriodCount">
-                <option :value="1">1</option>
-                <option :value="2">2</option>
-                <option :value="3">3</option>
-              </select>-->
-              <va-select :options="periodCountOpt" v-model="state.displayPeriodCount" label="Contagem do Período">
-              </va-select>
+          <div class="field2">
+            <div class="control">
+              <div class="">
+                <va-select :options="periodCountOpt" v-model="state.displayPeriodCount" label="Contagem do Período">
+                </va-select>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="field">
-          <!--<label class="label">Dia inicial da semana</label>-->
-          <div class="control">
-            <div class="">
-              <!--<select v-model="state.startingDayOfWeek">
-                <option v-for="(d, index) in dayNames" :key="index" :value="index">
-                  {{ d }}
-                </option>
-              </select>-->
-              <va-select
-                v-model="state.startingDayOfWeek"
-                :options="dayNameOpt"
-                :value-by="(option: any) => option.id"
-                label="Dia inicial da semana"
-              >
-              </va-select>
+          <div class="field">
+            <div class="control">
+              <div class="">
+                <va-select
+                  v-model="state.startingDayOfWeek"
+                  :options="dayNameOpt"
+                  :value-by="(option: any) => option.id"
+                  label="Dia inicial da semana"
+                >
+                </va-select>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="field">
-          <label class="checkbox">
-            <input v-model="state.useTodayIcons" type="checkbox" />
-            Use o ícone para o período de hoje
-          </label>
-        </div>
+          <div class="field">
+            <label class="checkbox">
+              <input v-model="state.useTodayIcons" type="checkbox" />
+              Use o ícone para o período de hoje
+            </label>
+          </div>
 
-        <div class="field">
-          <label class="checkbox">
-            <input v-model="state.displayWeekNumbers" type="checkbox" />
-            Mostrar número da semana
-          </label>
-        </div>
+          <div class="field">
+            <label class="checkbox">
+              <input v-model="state.displayWeekNumbers" type="checkbox" />
+              Mostrar número da semana
+            </label>
+          </div>
 
-        <div class="field">
-          <label class="checkbox">
-            <input v-model="state.showTimes" type="checkbox" />
-            Mostrar horários
-          </label>
-        </div>
+          <div class="field">
+            <label class="checkbox">
+              <input v-model="state.showTimes" type="checkbox" />
+              Mostrar horários
+            </label>
+          </div>
 
-        <div class="field">
-          <label class="label">Temas</label>
-          <label class="checkbox">
-            <input v-model="state.useDefaultTheme" type="checkbox" />
-            Padrão
-          </label>
-        </div>
+          <div class="field">
+            <label class="label">Temas</label>
+            <label class="checkbox">
+              <input v-model="state.useDefaultTheme" type="checkbox" />
+              Padrão
+            </label>
+          </div>
 
-        <div class="field">
-          <label class="checkbox">
-            <input v-model="state.useHolidayTheme" type="checkbox" />
-            Feriados
-          </label>
+          <div class="field">
+            <label class="checkbox">
+              <input v-model="state.useHolidayTheme" type="checkbox" />
+              Feriados
+            </label>
+          </div>
+          <va-button @click="ok" class="btn-config"><span style="font-size: 20px"> Concluir</span></va-button>
         </div>
       </div>
-    </div>
+    </template>
   </va-modal>
 
   <!--CALENDAR FULL-->
@@ -341,7 +333,7 @@
   const serviceTime = ref(new Date())
   const invalidDate = ref(true)
 
-  const value = ref()
+  const value = ref('Mês')
   const month = ref()
   const week = ref()
   const year = ref()
@@ -1178,9 +1170,32 @@ state.items = [...state.items, { ...obj }]*/
 
   #example-full .calendar-controls {
     margin-right: 1rem;
-    min-width: 14rem;
+    min-width: 2rem;
     max-width: 14rem;
   }
+
+  div.va-modal__inner {
+    min-width: 300px !important;
+  }
+
+  /**CONFIG MODAL */
+  .calendar-controls {
+    width: 96%;
+    margin: auto;
+    position: fixed;
+    bottom: 80%;
+    right: 2%;
+    height: 100px;
+  }
+
+  .btn-config {
+    margin-bottom: 40px;
+    margin-top: 80px;
+    width: 100%;
+    height: 50px;
+  }
+
+  /**^^^^^^ */
 
   #example-full .calendar-parent {
     display: flex;
@@ -1242,16 +1257,115 @@ state.items = [...state.items, { ...obj }]*/
 
   .input-select {
     padding: 0;
-    width: 100%;
+    width: 200px;
     margin: 5px 0px;
   }
 
-  .va-modal__inner {
-    padding: 0px;
+  .modal-container {
+    height: 150px;
   }
 
+  .date {
+    height: 30px;
+    width: 50px;
+    margin-bottom: 30px;
+  }
+
+  .date-time-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 10px 0px 5px;
+    width: 100%;
+    height: fit-content;
+  }
+
+  .header-container {
+    display: flex;
+    width: 100%;
+    height: 50px;
+    background-color: rgb(107, 107, 106);
+  }
+
+  .new-container {
+    height: 75%;
+    position: fixed;
+    background-color: white;
+    bottom: 10%;
+    width: 96%;
+    right: 2%;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    color: white;
+    margin: auto;
+  }
+
+  .btn-group {
+    display: flex;
+    flex-direction: column-reverse;
+    margin-top: 50px;
+  }
+
+  .btn-save {
+    height: 50px;
+    margin-bottom: 5px;
+  }
+
+  .btn-cancel {
+    height: 50px;
+  }
+
+  .btn-top {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .header-container-check {
+    color: white;
+    background-color: #808080;
+    width: 100%;
+    text-align: center;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   /*****/
-  @media screen and (min-width: 400px) {
+  @media screen and (min-width: 500px) {
+    .header-container {
+      display: flex;
+      width: 100%;
+      height: 50px;
+      background-color: rgb(107, 107, 106);
+    }
+
+    .new-container {
+      height: 500px;
+      position: fixed;
+      background-color: white;
+      bottom: 10%;
+      max-width: 50%;
+      right: 25%;
+    }
+
+    .calendar-controls {
+      width: 50%;
+      margin: auto;
+      position: fixed;
+      bottom: 80%;
+      right: 25%;
+      height: 100px;
+    }
+
+    .btn-config {
+      margin-bottom: 10px;
+      margin-top: 20px;
+      width: 100%;
+      height: 50px;
+    }
+
     h1 {
       font-size: 1.5rem;
       color: white;
@@ -1279,10 +1393,6 @@ state.items = [...state.items, { ...obj }]*/
       margin: 10px 0px 5px;
     }
 
-    .new-container {
-      height: 400px;
-    }
-
     .date {
       width: 48%;
     }
@@ -1297,7 +1407,8 @@ state.items = [...state.items, { ...obj }]*/
 
     .btn-group {
       display: flex;
-      margin-top: 100px;
+      flex-direction: row;
+      margin-top: 50px;
     }
 
     .btn-cancel {
