@@ -104,7 +104,7 @@
       </div>
 
       <!--EDIT MODAL-->
-      <va-modal v-model="showEdit" okText="Guardar" cancelText="Cancelar">
+      <va-modal v-model="showEdit" okText="Guardar" cancelText="Cancelar" @ok="updateEvent()">
         <template #content="{ ok, cancel }">
           <div class="header-container-check" style="margin-bottom: 15px">
             <h1 class="title-modal">Opções de Edição</h1>
@@ -141,7 +141,7 @@
           </div>
           <div class="btn-option">
             <va-button preset="plain" class="btn-cancel" @click="cancel">Cancelar</va-button>
-            <va-button class="btn-guardar" @click="ok">Guardar</va-button>
+            <va-button class="btn-guardar" @click="ok" :disabled="invalidDate">Guardar</va-button>
           </div>
         </template>
       </va-modal>
@@ -339,6 +339,7 @@
   const service = ref()
   const serviceDate = ref(new Date())
   const serviceTime = ref(new Date())
+  const invalidDate = ref(true)
 
   const value = ref()
   const month = ref()
@@ -726,7 +727,7 @@ startDate: "2018-01-05",
 
   const onClickItem = (e: INormalizedCalendarItem): void => {
     //getClientById( `${e.id}`,`${e.originalItem['idCliente']}`)
-    console.log('E: ', e)
+    //console.log('E: ', e)
 
     state.message = `Cliente: ${e.title}`
     state.data = setPopupDateHour(`${e.startDate}`)
@@ -736,7 +737,9 @@ startDate: "2018-01-05",
     state.price = `${e.originalItem['price']}`
     state.id = `${e.id}`
     showModal.value = true
-    console.log('E: ', e.originalItem.price)
+    serviceDate.value = new Date(`${e.startDate}`)
+    serviceTime.value = new Date(`${e.startDate}`)
+    //console.log('E: ', serviceDate.value)
     //fillEmailParams(`${e.title}`, state.matricula, state.marca, state.modelo, state.data, state.id)
   }
 
@@ -987,6 +990,62 @@ state.items = [...state.items, { ...obj }]*/
       })
   }
   //<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  //VALIDATE DATE AND TIME BEFORE UPDATE EVENT INFO
+  watch([serviceDate, serviceTime], () => {
+    let d = serviceDate.value
+    let t = serviceTime.value
+    let event = new Date(
+      d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + t.getHours() + ':' + t.getMinutes(),
+    )
+    if (event < new Date()) {
+      invalidDate.value = true
+    } else {
+      invalidDate.value = false
+    }
+  })
+
+  //UPDATE EVENT INFO
+  async function updateEvent() {
+    var d = serviceDate.value
+    var t = serviceTime.value
+    var info = `${d.getFullYear()}-${
+      d.getMonth() + 1
+    }-${d.getDate()} ${t.getHours()}:${t.getMinutes()}:${t.getSeconds()}`
+    // console.log("service info: ", info, state.id)
+
+    let data = JSON.stringify({
+      uniqueId: state.id,
+      dataHora: info,
+      confirm: 0,
+    })
+    await axios
+      .request({
+        url: 'https://rosemeri-beauty.vinim.eu/api/calendar/update_ondrop.php',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        method: 'POST',
+        maxBodyLength: Infinity,
+        data: data,
+      })
+      .then((res) => {
+        console.log('UPDATE: ', res.data)
+        if (res.data) {
+          let msg = 'Agendamento alterado com sucesso'
+          let color = '#008000'
+          notify(msg, color)
+        } else {
+          let msg = 'Agendamento não alterado'
+          let color = '#ff0000'
+          notify(msg, color)
+        }
+        showModal.value = false
+        showEdit.value = false
+        getCalendar()
+      })
+      .catch()
+  }
 
   //UPDATE EVENT DATE ON DROP
   const onDrop = (item: INormalizedCalendarItem, date: Date): void => {
