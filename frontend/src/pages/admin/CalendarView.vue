@@ -72,6 +72,7 @@
   <!--MODAL CLICK ITEM-->
   <va-modal
     :mobile-fullscreen="false"
+    fullscreen
     v-model="showModal"
     okText="Confirmar"
     cancelText="Cancelar"
@@ -114,50 +115,60 @@
         <!--EDIT MODAL-->
         <va-modal v-model="showEdit" okText="Guardar" cancelText="Cancelar" @ok="updateEvent()">
           <template #content="{ ok, cancel }">
-            <div class="header-container-check" style="margin-bottom: 15px">
-              <h1 class="title-modal">Opções de Edição</h1>
-            </div>
+            <div class="new-container">
+              <div class="header-container-check" style="margin-bottom: 15px">
+                <h1 class="title-modal">Opções de Edição</h1>
+              </div>
 
-            <div class="edit-modal">
-              <va-collapse
-                class="min-w-96"
-                header="Editar Agendamento"
-                color="primary"
-                v-model="colDelete"
-                @click="colEdit = false"
-              >
-                <div class="collapse">
-                  <va-date-picker v-model="serviceDate" class="col-date" label="Editar Data"></va-date-picker>
-                  <va-time-picker class="col-time" v-model="serviceTime"></va-time-picker>
-                </div>
-              </va-collapse>
+              <div class="edit-modal">
+                <va-collapse
+                  class="min-w-96"
+                  header="Editar Agendamento"
+                  color="primary"
+                  v-model="colDelete"
+                  @click="colEdit = false"
+                >
+                  <div class="collapse">
+                    <va-date-picker v-model="serviceDate" class="col-date" label="Editar Data"></va-date-picker>
+                    <va-time-picker class="col-time" v-model="serviceTime"></va-time-picker>
+                  </div>
+                </va-collapse>
 
-              <va-collapse
-                class="min-w-96"
-                header="Eliminar Agendamento"
-                v-model="colEdit"
-                color="#ffff"
-                @click="colDelete = false"
-              >
-                <!--CANCELAR EVENTO-->
-                <div class="delete-col">
-                  <p class="p-delete">Tem certeza que deseja eliminar o agendamento?</p>
+                <va-collapse
+                  class="min-w-96"
+                  header="Eliminar Agendamento"
+                  v-model="colEdit"
+                  color="#ffff"
+                  @click="colDelete = false"
+                >
+                  <!--CANCELAR EVENTO-->
+                  <div class="delete-col">
+                    <p class="p-delete">Tem certeza que deseja eliminar o agendamento?</p>
 
-                  <va-button color="#434343" class="btn-delete" @click="onDeleteItem(state.id)">Eliminar</va-button>
-                </div>
-              </va-collapse>
-            </div>
-            <div class="btn-option">
-              <va-button preset="plain" class="btn-cancel" @click="cancel">Cancelar</va-button>
-              <va-button class="btn-guardar" @click="ok" :disabled="invalidDate">Guardar</va-button>
+                    <va-button color="#434343" class="btn-delete" @click="onDeleteItem(state.id)"
+                      ><span style="font-size: 20px">Eliminar</span></va-button
+                    >
+                  </div>
+                </va-collapse>
+              </div>
+              <div class="btn-option">
+                <va-button preset="plain" class="btn-cancel" @click="cancel"
+                  ><span style="font-size: 20px">Cancelar</span></va-button
+                >
+                <va-button class="btn-guardar" @click="ok" :disabled="invalidDate"
+                  ><span style="font-size: 20px">Guardar</span></va-button
+                >
+              </div>
             </div>
           </template>
         </va-modal>
 
         <!--BOTÃO DE CONFIRMAÇÃO-->
         <div class="btn-group">
-          <va-button class="btn-cancel" preset="plain" @click="cancel">Cancelar</va-button>
-          <va-button class="btn-save" @click="ok">Confirmar</va-button>
+          <va-button class="btn-cancel" preset="plain" @click="cancel"
+            ><span style="font-size: 20px">Cancelar</span></va-button
+          >
+          <va-button class="btn-save" @click="ok"><span style="font-size: 20px">Confirmar</span></va-button>
         </div>
       </div>
     </template>
@@ -1183,14 +1194,14 @@ state.items = [...state.items, { ...obj }]*/
     width: 96%;
     margin: auto;
     position: fixed;
-    bottom: 80%;
+    bottom: 77%;
     right: 2%;
     height: 100px;
   }
 
   .btn-config {
     margin-bottom: 40px;
-    margin-top: 80px;
+    margin-top: 30px;
     width: 100%;
     height: 50px;
   }
@@ -1288,12 +1299,13 @@ state.items = [...state.items, { ...obj }]*/
   }
 
   .new-container {
-    height: 75%;
+    height: 90%;
     position: fixed;
     background-color: white;
-    bottom: 10%;
+    bottom: 0%;
     width: 96%;
     right: 2%;
+    overflow: auto;
   }
 
   h1 {
@@ -1305,12 +1317,12 @@ state.items = [...state.items, { ...obj }]*/
   .btn-group {
     display: flex;
     flex-direction: column-reverse;
-    margin-top: 50px;
+    margin-top: 10px;
   }
 
   .btn-save {
     height: 50px;
-    margin-bottom: 5px;
+    margin-bottom: 1px;
   }
 
   .btn-cancel {
@@ -1331,6 +1343,101 @@ state.items = [...state.items, { ...obj }]*/
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .update {
+    position: relative;
+    right: 20px;
+    width: 30px;
+    color: white;
+  }
+
+  .img-service {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+
+  .service-item-flex {
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(239, 239, 239);
+    margin: 4px 0px 0px 0px;
+    padding-left: 3px;
+    width: 100%;
+    height: 40px;
+    padding: 0px 15px;
+  }
+
+  .item-service {
+    font-size: 1.5rem;
+  }
+
+  .edit-modal {
+    width: 100%;
+    font-size: 20px;
+    height: 500px;
+  }
+
+  .collapse {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    height: 230px;
+    background-color: rgb(243, 240, 240);
+    margin-bottom: 10px;
+  }
+
+  .col-date {
+    margin-left: 5px;
+    background-color: white;
+    box-shadow: -1px 1px 20px -2px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: -1px 1px 20px -2px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: -1px 1px 20px -2px rgba(0, 0, 0, 0.75);
+  }
+
+  .col-time {
+    margin-left: 10px;
+    height: 100%;
+    background-color: white;
+    box-shadow: -1px 1px 20px -2px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: -1px 1px 20px -2px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: -1px 1px 20px -2px rgba(0, 0, 0, 0.75);
+  }
+
+  .delete-col {
+    padding-top: 30px;
+    background-color: rgb(243, 240, 240);
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .p-delete {
+    text-align: center;
+  }
+
+  .btn-delete {
+    width: 100px;
+    margin: auto;
+    background-color: #434343;
+  }
+
+  .btn-option {
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    bottom: 20%;
+  }
+
+  .btn-guardar {
+    width: 100%;
+    height: 50px;
+  }
+
+  .btn-cancel {
+    width: 100%;
   }
   /*****/
   @media screen and (min-width: 500px) {
@@ -1540,9 +1647,6 @@ state.items = [...state.items, { ...obj }]*/
       width: 100px;
       margin: auto;
       background-color: #434343;
-    }
-
-    .btn-option {
     }
 
     .btn-guardar {
