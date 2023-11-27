@@ -113,9 +113,9 @@
         </div>
 
         <!--EDIT MODAL-->
-        <va-modal v-model="showEdit" okText="Guardar" cancelText="Cancelar" @ok="updateEvent()">
+        <va-modal v-model="showEdit" okText="Guardar" cancelText="Cancelar" @ok="updateEvent()" fullscreen>
           <template #content="{ ok, cancel }">
-            <div class="new-container">
+            <div class="new-container-edit">
               <div class="header-container-check" style="margin-bottom: 15px">
                 <h1 class="title-modal">Opções de Edição</h1>
               </div>
@@ -1307,6 +1307,16 @@ state.items = [...state.items, { ...obj }]*/
     overflow: auto;
   }
 
+  .new-container-edit {
+    height: 90%;
+    position: fixed;
+    background-color: white;
+    bottom: 0%;
+    width: 96%;
+    right: 2%;
+    overflow: auto;
+  }
+
   h1 {
     font-size: 1.5rem;
     color: white;
@@ -1438,6 +1448,7 @@ state.items = [...state.items, { ...obj }]*/
   .btn-cancel {
     width: 100%;
   }
+
   /*****/
   @media screen and (min-width: 500px) {
     .header-container {
@@ -1455,6 +1466,33 @@ state.items = [...state.items, { ...obj }]*/
       max-width: 50%;
       right: 25%;
       overflow: hidden;
+      -webkit-box-shadow: -1px 0px 28px -18px rgba(0, 0, 0, 0.75);
+      -moz-box-shadow: -1px 0px 28px -18px rgba(0, 0, 0, 0.75);
+      box-shadow: -1px 0px 28px -18px rgba(0, 0, 0, 0.75);
+    }
+
+    .new-container-edit {
+      height: fit-content;
+      position: fixed;
+      background-color: white;
+      bottom: 10%;
+      width: 50%;
+      right: 25%;
+      overflow: auto;
+      padding: 10px;
+      border-radius: 5px;
+      -webkit-box-shadow: -1px 0px 28px -18px rgba(0, 0, 0, 0.75);
+      -moz-box-shadow: -1px 0px 28px -18px rgba(0, 0, 0, 0.75);
+      box-shadow: -1px 0px 28px -18px rgba(0, 0, 0, 0.75);
+    }
+
+    .btn-option {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      margin-top: 30px;
+      bottom: 0%;
+      padding: 10px;
     }
 
     .calendar-controls {
@@ -1600,8 +1638,10 @@ state.items = [...state.items, { ...obj }]*/
     }
 
     .edit-modal {
-      width: 450px;
-      height: 350px;
+      padding: 10px;
+      width: 100%;
+      height: 370px;
+      overflow: hidden;
     }
 
     .collapse {
@@ -1614,7 +1654,7 @@ state.items = [...state.items, { ...obj }]*/
     }
 
     .col-date {
-      margin-left: 20px;
+      margin-left: 50px;
       background-color: white;
       box-shadow: -1px 1px 20px -2px rgba(0, 0, 0, 0.75);
       -webkit-box-shadow: -1px 1px 20px -2px rgba(0, 0, 0, 0.75);
@@ -1622,7 +1662,7 @@ state.items = [...state.items, { ...obj }]*/
     }
 
     .col-time {
-      margin-right: 20px;
+      margin-right: 50px;
       height: 100%;
       background-color: white;
       box-shadow: -1px 1px 20px -2px rgba(0, 0, 0, 0.75);
