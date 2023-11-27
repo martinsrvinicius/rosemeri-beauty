@@ -1194,9 +1194,8 @@ state.items = [...state.items, { ...obj }]*/
     width: 96%;
     margin: auto;
     position: fixed;
-    bottom: 77%;
+    bottom: 5%;
     right: 2%;
-    height: 100px;
   }
 
   .btn-config {
@@ -1449,12 +1448,13 @@ state.items = [...state.items, { ...obj }]*/
     }
 
     .new-container {
-      height: 500px;
+      height: 550px;
       position: fixed;
       background-color: white;
       bottom: 10%;
       max-width: 50%;
       right: 25%;
+      overflow: hidden;
     }
 
     .calendar-controls {
