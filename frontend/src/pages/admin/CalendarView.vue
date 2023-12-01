@@ -61,7 +61,9 @@
             <va-button class="btn-cancel" preset="plain" @click="cancel"
               ><span style="font-size: 20px">Cancelar</span></va-button
             >
-            <va-button class="btn-save" @click="ok"><span style="font-size: 20px">Agendar</span></va-button>
+            <va-button class="btn-save" @click="ok" :disabled="invalidDate"
+              ><span style="font-size: 20px">Agendar</span></va-button
+            >
           </div>
         </div>
       </template>
@@ -998,6 +1000,19 @@ state.items = [...state.items, { ...obj }]*/
   watch([serviceDate, serviceTime], () => {
     let d = serviceDate.value
     let t = serviceTime.value
+    let eventUpdate = new Date(
+      d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + t.getHours() + ':' + t.getMinutes(),
+    )
+    if (eventUpdate < new Date()) {
+      invalidDate.value = true
+    } else {
+      invalidDate.value = false
+    }
+  })
+
+  watch([date, time], () => {
+    let d = date.value
+    let t = time.value
     let event = new Date(
       d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + t.getHours() + ':' + t.getMinutes(),
     )
@@ -1007,7 +1022,6 @@ state.items = [...state.items, { ...obj }]*/
       invalidDate.value = false
     }
   })
-
   //UPDATE EVENT INFO
   async function updateEvent() {
     var d = serviceDate.value
@@ -1059,7 +1073,17 @@ state.items = [...state.items, { ...obj }]*/
     item.originalItem.startDate = CalendarMath.addDays(item.startDate, eLength)
     item.originalItem.endDate = CalendarMath.addDays(item.endDate, eLength)
     item.originalItem.style = 'background-color: #ffff66 '
-    updateDroppedItem(item.originalItem.id, item.originalItem.startDate)
+    if (item.originalItem.startDate < new Date()) {
+      let msg = 'Agendamento com data invalida.'
+      let color = '#ff0000'
+      notify(msg, color)
+      getCalendar()
+    } else {
+      let msg = 'Agendamento alterado com sucesso'
+      let color = '#008000'
+      notify(msg, color)
+      updateDroppedItem(item.originalItem.id, item.originalItem.startDate)
+    }
   }
 
   async function updateDroppedItem(uniqueId: string, dataHora: any) {
