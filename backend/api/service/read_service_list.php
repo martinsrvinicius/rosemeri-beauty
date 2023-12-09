@@ -21,6 +21,7 @@ if ($num > 0) {
         $service = array(
             'uniqueId' => $uniqueId,
             'titulo' => $titulo,
+            'duracao' => $duracao,
         );
         array_push($service_arr['service'], $service);
     }

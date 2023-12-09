@@ -36,11 +36,10 @@ for($i=0; $i < count($data->uniqueIdServico); $i++){
     $obj->confirm = $data->confirm; 
     $obj->uniqueIdCliente = $data->uniqueIdCliente; 
     $obj->uniqueIdServico = $data->uniqueIdServico[$i]; 
-    $obj->dataHora = $data->dataHora; 
+    $obj->dataHora = $data->dataHora[$i]; 
     //echo json_encode($obj);
     if($calendar->create_event($obj)) {
         $status = true;
-        
     } else {
         $status = false;
     }

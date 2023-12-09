@@ -518,8 +518,8 @@
     }
   }
 
-  function getCalendar() {
-    axios
+  async function getCalendar() {
+    await axios
       // .get(API_PATH + '/src/api/calendar_api.php?action=getCalendar')
       .get('https://rosemeri-beauty.vinim.eu/api/calendar/read_calendar.php')
       .then((res) => {
@@ -923,7 +923,7 @@ state.items = [...state.items, { ...obj }]*/
   }
   //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-  //GET ALL CLIENTS
+  //GET ALL SERVICES
   async function getServices() {
     await axios
       .request({
@@ -1074,7 +1074,7 @@ state.items = [...state.items, { ...obj }]*/
     item.originalItem.endDate = CalendarMath.addDays(item.endDate, eLength)
     item.originalItem.style = 'background-color: #ffff66 '
     if (item.originalItem.startDate < new Date()) {
-      let msg = 'Agendamento com data invalida.'
+      let msg = 'Agendamento com data inválida.'
       let color = '#ff0000'
       notify(msg, color)
       getCalendar()

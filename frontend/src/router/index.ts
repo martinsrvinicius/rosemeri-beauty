@@ -33,6 +33,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'calendar',
         component: () => import('../pages/admin/CalendarView.vue'),
       },
+      {
+        name: 'calendar-cal',
+        path: 'calendar-cal',
+        component: () => import('../pages/admin/CalendarCalView.vue'),
+      },
     ],
   },
   {

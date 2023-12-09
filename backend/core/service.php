@@ -10,6 +10,7 @@ class Service
     public $titulo;
     public $descricao;
     public $preco;
+    public $duracao;
     
 
 
@@ -23,7 +24,7 @@ class Service
     public function read_list_options()
     {
         //create query
-        $query = 'SELECT uniqueId, titulo from `servico`';
+        $query = 'SELECT uniqueId, titulo, duracao from `servico`';
 
         //prepare statement
         $stmt = $this->conn->prepare($query);

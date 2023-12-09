@@ -26,6 +26,13 @@ export default {
         icon: 'vuestic-iconset-dashboard',
       },
     },
+    {
+      name: 'calendar-cal',
+      displayName: 'Calendar Cal',
+      meta: {
+        icon: 'vuestic-iconset-dashboard',
+      },
+    },
     /** {
       name: 'statistics',
       displayName: 'menu.statistics',

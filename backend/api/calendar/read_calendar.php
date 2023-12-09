@@ -25,6 +25,7 @@ if ($num > 0) {
             'dataHora' => $dataHora,
             'confirm' => $confirm,
             'price' => $preco,
+            'duracao' => $duracao,
         );
         array_push($calendar_arr['calendar'], $event);
     }

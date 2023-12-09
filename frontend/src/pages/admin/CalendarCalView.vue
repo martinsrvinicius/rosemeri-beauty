@@ -1,0 +1,211 @@
+<template>
+  <div>
+    <div class="btn-top">
+      <va-button @click="addNew"> Novo Agendamento </va-button>
+      <va-button class="settings" preset="plain" @click="showConfig = !showConfig">
+        <va-icon name="settings" size="large"></va-icon>
+      </va-button>
+    </div>
+
+    <!--MODAL NOVO AGENDAMENTO-->
+    <va-modal :mobile-fullscreen="false" v-model="showModalNew" cancelText="Cancelar" okText="Agendar">
+      <template #content>
+        <AddNewService @cancel="showModalNew = false" @calendar="handleAddNewService" />
+      </template>
+    </va-modal>
+  </div>
+  <!--FIM MODAL NOVO AGENDAMENTO-->
+
+  <!--CALENDÁRIO-->
+  <vue-cal
+    style="height: 80vh"
+    class="vuecal--blue-theme"
+    :events="events"
+    today-button
+    :time-step="30"
+    locale="pt-br"
+    resize-x
+    editable-events
+    :disable-views="['years']"
+    click-to-navigate
+    :on-event-click="logEvents"
+  >
+  </vue-cal>
+
+  <!--MODAL SELECTED ITEM-->
+  <va-modal v-model="showModal" hide-default-actions :mobile-fullscreen="false">
+    <p v-html="selectedItem.contentFull"></p>
+    <va-button @click="closeModal = true">ok</va-button>
+  </va-modal>
+</template>
+
+<script setup lang="ts">
+  import VueCal from 'vue-cal'
+  import 'vue-cal/dist/vuecal.css'
+  import { ref, onMounted, watch } from 'vue'
+  import axios from 'axios'
+  import { useGlobalStore } from '../../stores/global-store'
+  import AddNewService from '../../components/modal/AddNewService.vue'
+
+  const GlobalStore = useGlobalStore()
+  const selectedItem = ref()
+  const showModal = ref()
+  const closeModal = ref()
+  const showConfig = ref()
+  const showModalNew = ref()
+
+  //Eventos
+  const events = ref([
+    {
+      id: '',
+      start: new Date(),
+      end: new Date(),
+      title: 'Need to go shopping',
+      content: '<i class="icon material-icons">shopping_cart</i>',
+      class: 'leisure',
+    },
+  ])
+
+  onMounted(() => {
+    getCalendar()
+  })
+
+  watch([showModal, closeModal], () => {
+    if (!showModal.value) {
+      showModal.value = true
+    }
+    if (closeModal.value) {
+      showModal.value = false
+    }
+  })
+
+  //Close modal and update calendar after new insert
+  function handleAddNewService() {
+    getCalendar()
+    showModalNew.value = false
+  }
+
+  async function getCalendar() {
+    await axios
+      // .get(API_PATH + '/src/api/calendar_api.php?action=getCalendar')
+      .get('https://rosemeri-beauty.vinim.eu/api/calendar/read_calendar.php')
+      .then((res) => {
+        console.log('GET CALENDAR: ', res.data)
+        fillCalendarItems(res.data.calendar)
+      })
+      .catch((error) => {
+        console.log('Erro: ', error)
+      })
+  }
+
+  //Open modal with selected item
+  function logEvents(event: any, e: any) {
+    closeModal.value = false
+    showModal.value = true
+    selectedItem.value = event
+    console.log('event: ', event)
+    e.stopPropagation()
+  }
+
+  function fillCalendarItems(value: any) {
+    events.value = []
+
+    let i = 0
+    while (i < value.length) {
+      var dataHora = new Date(value[i]['dataHora'])
+      var obj = {
+        id: String(value[i].uniqueId),
+        start: dataHora,
+        end: calculateServiceTime(value[i].dataHora, value[i].duracao),
+        title: '<p style="background-color:#ff3399; color:white"><strong>' + value[i].service + '</strong></p>',
+        content: '<p>Cliente: ' + value[i].client + ', Preço: ' + value[i].price + '</p>',
+        contentFull: '<p>Cliente: ' + value[i].client + ', Preço: ' + value[i].price + '</p>',
+        class: 'le',
+      }
+      events.value = [...events.value, { ...obj }]
+      i++
+    }
+  }
+
+  //Function to calculate the duration of the service to set the end time on calendar
+  function calculateServiceTime(start: string, time: string) {
+    //Start is the begining of the event date and hours
+    let split = start.split(' ')
+    //Split hours and minutes
+    let splitStart = split[1].split(':')
+    //Convert to minutes
+    let toMinutes = Number(splitStart[0]) * 60
+    toMinutes += Number(time) + Number(splitStart[1])
+    //Convert to hour
+    let toHour = toMinutes / 60
+    let min = null
+    let s = String(toHour).split('.')
+    if (s[1]) {
+      //If hour is split
+      min = (Number(s[1]) * 60) / 100
+      if (String(min).length > 1) {
+        //If minutes has more than 2 digits
+        if (String(min)[0] == '9' && String(min)[1] == '9') {
+          //If minutes is 99999
+          min = 10
+        } else {
+          //If there is two digits and number string can be parsed to number
+          min = Number(String(min)[0] + String(min)[1])
+        }
+      }
+    }
+    //If min is == null it receives 0 zero
+    if (!min) {
+      min = '0'
+    }
+    //If the duration is lower than 10 minutes it receives the value of 10 minutes minimum
+    if (Number(time) < 10) {
+      min = '10'
+    }
+    //If it past the 24h it receives the later value available in a day
+    if (Number(s[0]) > 24) {
+      s[0] = '23'
+      min = '59'
+    }
+    //Append a zero to a one digit number result
+    if (String(min).length < 2) {
+      min = min + '0'
+    }
+    return new Date(split[0] + ' ' + s[0] + ':' + min)
+  }
+
+  //<<<<<<<<<Add new event
+  function addNew() {
+    showModalNew.value = !showModalNew.value
+  }
+</script>
+
+<style>
+  .vuecal__no-event {
+    display: flex;
+  }
+
+  .vuecal__event {
+    background-color: #ffcce6;
+  }
+
+  .btn-top {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  body > div.va-modal > div.va-modal__container > div > div {
+    min-width: 330px !important;
+    overflow: hidden !important;
+  }
+
+  @media screen and (min-width: 450px) {
+    .btn-top {
+      display: flex;
+      justify-content: space-between;
+    }
+    .settings {
+      margin-bottom: 10px;
+    }
+  }
+</style>

@@ -24,3 +24,8 @@ export function subtractDate(d, steps) {
 
   return date
 }
+
+export function formatFn(date) {
+  date.toLocaleDateString('pt-PT', { year: 'numeric', month: '2-digit', day: '2-digit' })
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+}
