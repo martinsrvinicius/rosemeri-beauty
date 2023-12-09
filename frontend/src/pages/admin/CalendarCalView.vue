@@ -17,25 +17,26 @@
   <!--FIM MODAL NOVO AGENDAMENTO-->
 
   <!--CALENDÁRIO-->
-  <vue-cal
-    style="height: 80vh"
-    class="vuecal--blue-theme"
-    :events="events"
-    today-button
-    :time-step="30"
-    locale="pt-br"
-    resize-x
-    editable-events
-    :disable-views="['years']"
-    click-to-navigate
-    :on-event-click="logEvents"
-  >
-  </vue-cal>
+  <va-inner-loading :loading="!refresh">
+    <vue-cal
+      style="height: 80vh"
+      class="vuecal--blue-theme"
+      :events="events"
+      today-button
+      :time-step="30"
+      locale="pt-br"
+      :disable-views="['years']"
+      click-to-navigate
+      :on-event-click="logEvents"
+      v-if="refresh"
+    >
+    </vue-cal>
+  </va-inner-loading>
 
   <!--MODAL SELECTED ITEM-->
   <va-modal v-model="showModal" hide-default-actions :mobile-fullscreen="false">
-    <p v-html="selectedItem.contentFull"></p>
-    <va-button @click="closeModal = true">ok</va-button>
+    <EventDetails :item="selectedItem" @cancel="closeModal = true" @confirm="getCalendar" />
+    <!--<va-button @click="closeModal = true">Voltar</va-button>-->
   </va-modal>
 </template>
 
@@ -46,8 +47,9 @@
   import axios from 'axios'
   import { useGlobalStore } from '../../stores/global-store'
   import AddNewService from '../../components/modal/AddNewService.vue'
+  import EventDetails from '../../components/modal/EventDetails.vue'
 
-  const GlobalStore = useGlobalStore()
+  const refresh = ref(true)
   const selectedItem = ref()
   const showModal = ref()
   const closeModal = ref()
@@ -62,7 +64,6 @@
       end: new Date(),
       title: 'Need to go shopping',
       content: '<i class="icon material-icons">shopping_cart</i>',
-      class: 'leisure',
     },
   ])
 
@@ -86,11 +87,13 @@
   }
 
   async function getCalendar() {
+    closeModal.value = true
+    refresh.value = false
     await axios
       // .get(API_PATH + '/src/api/calendar_api.php?action=getCalendar')
       .get('https://rosemeri-beauty.vinim.eu/api/calendar/read_calendar.php')
       .then((res) => {
-        console.log('GET CALENDAR: ', res.data)
+        //console.log('GET CALENDAR: ', res.data)
         fillCalendarItems(res.data.calendar)
       })
       .catch((error) => {
@@ -103,7 +106,7 @@
     closeModal.value = false
     showModal.value = true
     selectedItem.value = event
-    console.log('event: ', event)
+    //console.log('event: ', event)
     e.stopPropagation()
   }
 
@@ -117,14 +120,17 @@
         id: String(value[i].uniqueId),
         start: dataHora,
         end: calculateServiceTime(value[i].dataHora, value[i].duracao),
-        title: '<p style="background-color:#ff3399; color:white"><strong>' + value[i].service + '</strong></p>',
-        content: '<p>Cliente: ' + value[i].client + ', Preço: ' + value[i].price + '</p>',
-        contentFull: '<p>Cliente: ' + value[i].client + ', Preço: ' + value[i].price + '</p>',
-        class: 'le',
+        title:
+          '<p style="background-color:#ff3399; color:white; height:40px;padding-top:8px"><strong>' +
+          value[i].service +
+          '</strong></p>',
+        content: '<p>Cliente: ' + value[i].client + '</p>',
+        contentFull: value[i],
       }
       events.value = [...events.value, { ...obj }]
       i++
     }
+    refresh.value = true
   }
 
   //Function to calculate the duration of the service to set the end time on calendar
