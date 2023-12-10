@@ -27,6 +27,8 @@
       locale="pt-br"
       :disable-views="['years']"
       click-to-navigate
+      :time-from="7 * 60"
+      :time-to="24 * 60"
       :on-event-click="logEvents"
       @event-drop="handleOnDrop"
       :editable-events="{ title: false, drag: true, resize: false, delete: true, create: false }"
