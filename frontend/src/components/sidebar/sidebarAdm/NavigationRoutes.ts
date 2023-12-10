@@ -14,23 +14,17 @@ export default {
   routes: [
     {
       name: 'page-1',
-      displayName: 'Home',
+      displayName: 'Painel Principal',
       meta: {
-        icon: 'vuestic-iconset-dashboard',
+        icon: 'material-icons-add_chart',
       },
     },
-    {
-      name: 'calendar',
-      displayName: 'Agenda',
-      meta: {
-        icon: 'vuestic-iconset-dashboard',
-      },
-    },
+
     {
       name: 'calendar-cal',
-      displayName: 'Calendar Cal',
+      displayName: 'Agenda',
       meta: {
-        icon: 'vuestic-iconset-dashboard',
+        icon: 'material-icons-event_repeat',
       },
     },
     /** {

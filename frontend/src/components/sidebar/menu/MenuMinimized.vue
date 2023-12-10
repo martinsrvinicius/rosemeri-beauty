@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-  import { INavigationRoute } from '../NavigationRoutes'
+  import { INavigationRoute } from '../sidebarAdm/NavigationRoutes'
   import { ref } from 'vue'
   import { useRoute } from 'vue-router'
   import { useI18n } from 'vue-i18n'

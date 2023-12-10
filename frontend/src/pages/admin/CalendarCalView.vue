@@ -20,7 +20,7 @@
   <va-inner-loading :loading="!refresh">
     <vue-cal
       style="height: 80vh"
-      class="vuecal--blue-theme"
+      class="vuecal--green-theme"
       :events="events"
       today-button
       :time-step="30"
@@ -263,6 +263,23 @@
     background-color: #ffcce6;
   }
 
+  /* Green-theme. */
+
+  .vuecal--green-theme {
+    background-color: #fbf6f3;
+  }
+  .vuecal--green-theme .vuecal__title-bar {
+    background-color: #e0dfe0;
+  }
+
+  .vuecal--green-theme .vuecal__menu,
+  .vuecal--green-theme .vuecal__cell-events-count {
+    background-color: #6b6b6b;
+  }
+
+  .vuecal--green-theme .vuecal__cell-events-count {
+    background-color: #ff477e;
+  }
   .btn-top {
     display: flex;
     justify-content: space-between;

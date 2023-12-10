@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
   import { onMounted, ref } from 'vue'
-  import { INavigationRoute } from '../NavigationRoutes'
+  import { INavigationRoute } from '../sidebarAdm/NavigationRoutes'
   import { useRoute } from 'vue-router'
   import { useI18n } from 'vue-i18n'
   const { t } = useI18n()
@@ -68,7 +68,6 @@
     const isChildActive = !!item.children.find((child) =>
       child.children ? isItemExpanded(child) : isRouteActive(child),
     )
-
     return isCurrentItemActive || isChildActive
   }
 </script>
