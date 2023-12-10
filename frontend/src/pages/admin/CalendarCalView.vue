@@ -28,6 +28,8 @@
       :disable-views="['years']"
       click-to-navigate
       :on-event-click="logEvents"
+      @event-drop="handleOnDrop"
+      :editable-events="{ title: false, drag: true, resize: false, delete: true, create: false }"
       v-if="refresh"
     >
     </vue-cal>
@@ -48,7 +50,9 @@
   import { useGlobalStore } from '../../stores/global-store'
   import AddNewService from '../../components/modal/AddNewService.vue'
   import EventDetails from '../../components/modal/EventDetails.vue'
+  import { useToast } from 'vuestic-ui'
 
+  const { init: initToast } = useToast()
   const refresh = ref(true)
   const selectedItem = ref()
   const showModal = ref()
@@ -79,6 +83,58 @@
       showModal.value = false
     }
   })
+
+  //ON DROP
+  function handleOnDrop(event: any) {
+    if (event.newDate < new Date()) {
+      let msg = 'Agendamento com data inválida.'
+      let color = '#ff0000'
+      notify(msg, color)
+      getCalendar()
+    } else {
+      let msg = 'Agendamento alterado com sucesso'
+      let color = '#008000'
+      notify(msg, color)
+      updateDroppedItem(event.originalEvent.contentFull.uniqueId, event.newDate)
+    }
+  }
+
+  async function updateDroppedItem(uniqueId: string, dataHora: any) {
+    var d = new Date(dataHora)
+    var t = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
+    let data = JSON.stringify({
+      uniqueId: uniqueId,
+      dataHora: t,
+      confirm: 0,
+    })
+    await axios
+      .request({
+        url: 'https://rosemeri-beauty.vinim.eu/api/calendar/update_ondrop.php',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        method: 'POST',
+        maxBodyLength: Infinity,
+        data: data,
+      })
+      .then((res) => {
+        console.log('UPDATE: ', res.data)
+        if (res.data) {
+          let msg = 'Agendamento alterado com sucesso'
+          let color = '#008000'
+          notify(msg, color)
+        } else {
+          let msg = 'Agendamento não alterado'
+          let color = '#ff0000'
+          notify(msg, color)
+        }
+        getCalendar()
+      })
+      .catch((error) => {
+        console.log('Erro: ', error)
+      })
+  }
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   //Close modal and update calendar after new insert
   function handleAddNewService() {
@@ -184,6 +240,16 @@
   function addNew() {
     showModalNew.value = !showModalNew.value
   }
+
+  //NOTIFY EVENT CHANGES
+  function notify(name: string, color: string) {
+    initToast({
+      message: `${name}`,
+      position: 'top-right',
+      color: color,
+    })
+  }
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 </script>
 
 <style>
