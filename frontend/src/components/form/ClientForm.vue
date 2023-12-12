@@ -83,7 +83,8 @@
 
   .info-form > p {
     text-wrap: wrap;
-    width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-all;
   }
 
   .btn-group-form {
