@@ -19,12 +19,18 @@ export default {
         icon: 'material-icons-add_chart',
       },
     },
-
     {
       name: 'calendar-cal',
       displayName: 'Agenda',
       meta: {
         icon: 'material-icons-event_repeat',
+      },
+    },
+    {
+      name: 'clients',
+      displayName: 'Clientes',
+      meta: {
+        icon: 'material-icons-group',
       },
     },
     /** {

@@ -120,7 +120,6 @@
         data: data,
       })
       .then((res) => {
-        console.log('UPDATE: ', res.data)
         if (res.data) {
           let msg = 'Agendamento alterado com sucesso'
           let color = '#008000'
@@ -151,7 +150,6 @@
       // .get(API_PATH + '/src/api/calendar_api.php?action=getCalendar')
       .get('https://rosemeri-beauty.vinim.eu/api/calendar/read_calendar.php')
       .then((res) => {
-        //console.log('GET CALENDAR: ', res.data)
         fillCalendarItems(res.data.calendar)
       })
       .catch((error) => {
@@ -164,7 +162,6 @@
     closeModal.value = false
     showModal.value = true
     selectedItem.value = event
-    //console.log('event: ', event)
     e.stopPropagation()
   }
 
@@ -268,6 +265,7 @@
   .vuecal--green-theme {
     background-color: #fbf6f3;
   }
+
   .vuecal--green-theme .vuecal__title-bar {
     background-color: #e0dfe0;
   }
@@ -280,6 +278,7 @@
   .vuecal--green-theme .vuecal__cell-events-count {
     background-color: #ff477e;
   }
+
   .btn-top {
     display: flex;
     justify-content: space-between;
@@ -295,8 +294,15 @@
       display: flex;
       justify-content: space-between;
     }
+
     .settings {
       margin-bottom: 10px;
+    }
+
+    body > div.va-modal > div.va-modal__container > div > div {
+      width: fit-content !important;
+      overflow: hidden !important;
+      max-height: 620px;
     }
   }
 </style>

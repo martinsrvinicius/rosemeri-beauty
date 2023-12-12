@@ -100,8 +100,6 @@
         data: data,
       })
       .then((res) => {
-        /// console.log('UPDATE: ', res.data)
-
         if (res.data) {
           let msg = 'Agendamento alterado com sucesso'
           let color = '#008000'
