@@ -79,6 +79,7 @@
   .info-form {
     padding-top: 20px;
     padding-bottom: 20px;
+    max-width: 300px;
   }
 
   .info-form > p {
@@ -145,6 +146,10 @@
 
     .btn-form-option {
       margin-top: 10px;
+    }
+
+    .info-form {
+      max-width: unset;
     }
   }
 </style>
