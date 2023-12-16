@@ -30,6 +30,18 @@ class Client
         return $stmt;
     }
 
+    public function readFull()
+    {
+        //create query
+        $query = 'SELECT uniqueId, nome, data_nasc, telefone, whatsapp, nif, rua, localidade, zipcode, pais from `cliente`';
+
+        //prepare statement
+        $stmt = $this->conn->prepare($query);
+        //execute query
+        $stmt->execute();
+        return $stmt;
+    }
+
     //Insert client 
     public function create()
     {
