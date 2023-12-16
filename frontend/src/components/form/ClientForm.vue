@@ -79,13 +79,15 @@
   .info-form {
     padding-top: 20px;
     padding-bottom: 20px;
-    max-width: 300px;
+    max-width: 290px;
   }
 
   .info-form > p {
     text-wrap: wrap;
     overflow-wrap: break-word;
     word-break: break-all;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .btn-group-form {
