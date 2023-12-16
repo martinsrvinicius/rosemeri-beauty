@@ -4,7 +4,9 @@
     <div class="info-form">
       <p class="mb-5"><strong>Nome:&nbsp;</strong> {{ client.Nome }}</p>
       <p class="mb-5">
-        <strong>Endereço:&nbsp;</strong> Rua José Ribeiro Vieira de Castro, 1023, Fafe, 4820-273 Portugal
+        <strong>Endereço:&nbsp;</strong><br />
+        Rua José Ribeiro Vieira de Castro, 1023,<br />
+        Fafe, <br />4820-273 Portugal
       </p>
       <p class="mb-5"><strong>Email:&nbsp;</strong> martinsrvinicius@gmail.com</p>
       <p class="mb-5"><strong>Data de Nascimento:&nbsp;</strong> 12/05/1988</p>
@@ -79,7 +81,7 @@
   .info-form {
     padding-top: 20px;
     padding-bottom: 20px;
-    max-width: 290px;
+    width: 100%;
   }
 
   .info-form > p {
@@ -151,7 +153,6 @@
     }
 
     .info-form {
-      max-width: unset;
     }
   }
 </style>
