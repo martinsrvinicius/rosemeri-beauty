@@ -15,7 +15,7 @@ $client = new Client($db);
 //get raw posted data
 $data = json_decode(file_get_contents('php://input'));
 
-$client->name = $data->name; 
+$client->name = $data->nome; 
 $client->uniqueId = $data->uniqueId; 
 
 $obj = (object) [
@@ -26,6 +26,7 @@ $obj = (object) [
     'localidade'=>null,
     'zipcode'=>null,
     'pais'=>null,
+    'email'=>null,
 ];
 $obj->data_nasc = $data->data_nasc;
 $obj->telefone = $data->telefone;
@@ -34,8 +35,9 @@ $obj->rua = $data->rua;
 $obj->localidade = $data->localidade;
 $obj->zipcode = $data->zipcode;
 $obj->pais = $data->pais;
+$obj->email = $data->email;
 //echo json_encode($client);
-//create event on calendar
+//Update client info
 if($client->update($obj)) {
     echo json_encode(array($res['status'] = true));
 } else {

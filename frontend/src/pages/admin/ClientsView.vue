@@ -29,23 +29,30 @@
 
   <va-card class="main-table">
     <va-data-table :items="items" :columns="columns" sticky-header :wrapper-size="200" :bench="10" height="500px">
+      <template #cell(client)="{ rowIndex }">
+        <div class="name-container">
+          <span>{{ items[rowIndex].client }}</span>
+        </div>
+      </template>
+
       <template #cell()="{ row, isExpanded }">
         <va-button preset="plain" :icon="isExpanded ? 'va-arrow-up' : 'va-arrow-down'" @click="row.toggleRowDetails()">
           {{ isExpanded ? 'Menos' : 'Mais' }}
         </va-button>
       </template>
       <template #expandableRow="{ rowData }">
-        <ClientForm :client="rowData" />
+        <ClientForm :client="rowData" @update="getClientFullInfo" />
       </template>
     </va-data-table>
   </va-card>
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
   import ClientForm from '../../components/form/ClientForm.vue'
+  import axios from 'axios'
   const showAdd = ref()
-  const columns = [{ key: 'Id' }, { key: 'Nome' }, { key: 'Telefone' }, { key: '' }]
+  const columns = [{ key: 'Id' }, { key: 'client', label: 'Nome' }, { key: 'telefone', label: 'Telefone' }, { key: '' }]
 
   const items = ref([
     {
@@ -129,6 +136,29 @@
       Telefone: '962468873',
     },
   ])
+
+  onMounted(() => {
+    getClientFullInfo()
+  })
+
+  //GET CLIENTS FULL INFO
+  async function getClientFullInfo() {
+    await axios
+      .request({
+        url: 'https://rosemeri-beauty.vinim.eu/api/clients/read_clients_full.php',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        method: 'GET',
+        maxBodyLength: Infinity,
+      })
+      .then((res) => {
+        // console.log("clients: ", res.data.clientsFull)
+        items.value = []
+        items.value = res.data.clientsFull
+      })
+      .catch()
+  }
 </script>
 
 <style scoped>
@@ -151,9 +181,35 @@
 
   .add-container {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     position: relative;
     bottom: 10px;
     right: 10px;
+  }
+
+  .name-container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 120px;
+    word-wrap: break-word;
+    text-wrap: wrap;
+    height: 30px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-wrap: wrap;
+  }
+
+  @media screen and (min-width: 450px) {
+    .name-container {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: unset;
+      word-wrap: break-word;
+      text-wrap: wrap;
+      height: 30px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      text-wrap: wrap;
+    }
   }
 </style>

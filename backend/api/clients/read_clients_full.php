@@ -29,6 +29,7 @@ if ($num > 0) {
             'localidade' => $localidade,
             'zipcode' => $zipcode,
             'pais' => $pais,
+            'email' => $email,
         );
         array_push($clients_arr['clientsFull'], $client);
     }
