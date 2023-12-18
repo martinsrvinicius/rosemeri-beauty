@@ -47,7 +47,7 @@
       <va-button preset="plain" class="btn-form-cancel" @click="showEdit = false"
         ><span style="font-size: 20px">Cancelar</span></va-button
       >
-      <va-button class="btn-form-guardar" @click="updateClientInfo" :disabled="invalidDate"
+      <va-button class="btn-form-guardar" @click="updateClientInfo"
         ><span style="font-size: 20px">Guardar</span></va-button
       >
     </div>
@@ -156,7 +156,6 @@
       .then((res) => {
         showEdit.value = false
         emit('update', true)
-        console.log('atualizado: ', res.data[0])
         if (res.data) {
           let msg = 'Cliente atualizado com sucesso'
           let color = '#008000'

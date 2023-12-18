@@ -15,10 +15,11 @@ $client = new Client($db);
 //get raw posted data
 $data = json_decode(file_get_contents('php://input'));
 
-$client->name = $data->name; 
+$client->name = $data->nome; 
 
 $obj = (object) [
     'data_nasc'=>null,
+    'email'=>null,
     'telefone'=>null,
     'whatsapp'=>null,
     'rua'=>null,
@@ -27,6 +28,7 @@ $obj = (object) [
     'pais'=>null,
 ];
 $obj->data_nasc = $data->data_nasc;
+$obj->email = $data->email;
 $obj->telefone = $data->telefone;
 $obj->whatsapp = $data->whatsapp;
 $obj->rua = $data->rua;

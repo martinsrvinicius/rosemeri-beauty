@@ -9,21 +9,26 @@
   <va-modal v-model="showAdd" hide-default-actions :mobile-fullscreen="false">
     <div class="modal-container-form">
       <h1>Novo Cliente</h1>
-      <va-input class="mb-3 mt-5 input" label="Nome"></va-input>
-      <va-input class="mb-3 input" label="Email"></va-input>
-      <va-input class="mb-3 input" label="Telefone"></va-input>
-      <va-date-input class="mb-3 input" label="Data de Nascimento"></va-date-input>
-      <va-input class="mb-3 input" label="Rua"></va-input>
-      <va-input class="mb-3 input" label="Código Postal"></va-input>
-      <va-select class="mb-3 input" label="País"></va-select>
+      <va-input class="mb-3 mt-5 input" label="Nome" v-model="newClient.nome"></va-input>
+      <va-input class="mb-3 input" label="Email" v-model="newClient.email"></va-input>
+      <va-input class="mb-3 input" label="Telefone" v-model="newClient.telefone"></va-input>
+      <va-input class="mb-3 input" label="Whatsapp" v-model="newClient.whatsapp"></va-input
+      ><va-date-input
+        class="mb-3 input"
+        label="Data de Nascimento"
+        v-model="newClient.data_nasc"
+        manual-input
+      ></va-date-input>
+      <va-input class="mb-3 input" label="Rua" v-model="newClient.rua"></va-input>
+      <va-input class="mb-3 input" label="Código Postal" v-model="newClient.zipcode"></va-input>
+      <va-input class="mb-3 input" label="Localidade" v-model="newClient.localidade"></va-input>
+      <va-input class="mb-3 input" label="País" v-model="newClient.pais"></va-input>
     </div>
     <div class="btn-form-option">
       <va-button preset="plain" class="btn-form-cancel" @click="showAdd = false"
         ><span style="font-size: 20px">Cancelar</span></va-button
       >
-      <va-button class="btn-form-guardar" @click="updateEvent" :disabled="invalidDate"
-        ><span style="font-size: 20px">Guardar</span></va-button
-      >
+      <va-button class="btn-form-guardar" @click="addNew"><span style="font-size: 20px">Guardar</span></va-button>
     </div>
   </va-modal>
 
@@ -48,94 +53,42 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue'
+  import { ref, onMounted, reactive } from 'vue'
   import ClientForm from '../../components/form/ClientForm.vue'
   import axios from 'axios'
+  import { useToast } from 'vuestic-ui'
+
+  const { init: initToast } = useToast()
   const showAdd = ref()
   const columns = [{ key: 'Id' }, { key: 'client', label: 'Nome' }, { key: 'telefone', label: 'Telefone' }, { key: '' }]
 
-  const items = ref([
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-    {
-      Id: '1',
-      Nome: 'Vinicius Martins',
-      Telefone: '962468873',
-    },
-  ])
+  interface IClient {
+    nome: string
+    email: string
+    telefone: string
+    whatsapp: string
+    data_nasc: Date
+    rua: string
+    zipcode: string
+    localidade: string
+    pais: string
+    nif: number
+  }
+
+  const items = ref<IClient | any>()
+
+  const newClient = reactive({
+    nome: '',
+    email: '',
+    telefone: '',
+    whatsapp: '',
+    data_nasc: new Date(),
+    rua: '',
+    zipcode: '',
+    localidade: '',
+    pais: '',
+    nif: 0,
+  } as IClient)
 
   onMounted(() => {
     getClientFullInfo()
@@ -159,6 +112,59 @@
       })
       .catch()
   }
+
+  //Create New Client
+  async function addNew() {
+    let day = newClient.data_nasc.getDate()
+    let month = newClient.data_nasc.getMonth() + 1
+    let year = newClient.data_nasc.getFullYear()
+    let data = JSON.stringify({
+      nome: newClient.nome,
+      email: newClient.email,
+      telefone: newClient.telefone,
+      whatsapp: newClient.whatsapp,
+      data_nasc: year + '-' + month + '-' + day,
+      rua: newClient.rua,
+      zipcode: newClient.zipcode,
+      localidade: newClient.localidade,
+      pais: newClient.pais,
+    })
+    await axios
+      .request({
+        url: 'https://rosemeri-beauty.vinim.eu/api/clients/create_client_full.php',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        method: 'POST',
+        maxBodyLength: Infinity,
+        data: data,
+      })
+      .then((res) => {
+        showAdd.value = false
+        console.log('Criado: ', res.data[0])
+        if (res.data) {
+          let msg = 'Cliente criado com sucesso'
+          let color = '#008000'
+          notify(msg, color)
+        } else {
+          let msg = 'Não foi possível criar o Cliente'
+          let color = '#ff0000'
+          notify(msg, color)
+        }
+        getClientFullInfo()
+      })
+      .catch()
+  }
+
+  //NOTIFY EVENT CHANGES
+  function notify(name: string, color: string) {
+    initToast({
+      message: `${name}`,
+      position: 'top-right',
+      color: color,
+    })
+  }
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 </script>
 
 <style scoped>

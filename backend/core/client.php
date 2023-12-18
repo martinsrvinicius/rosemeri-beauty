@@ -70,10 +70,11 @@ class Client
     public function createFull($obj)
     {
         //create query
-        $query = 'INSERT INTO `cliente`(uniqueId, nome, data_nasc, telefone, whatsapp, rua, localidade, zipcode, pais) VALUES (:uniqueId, :nome, :data_nasc, :telefone, :whatsapp, :rua, :localidade, :zipcode, :pais)';
+        $query = 'INSERT INTO `cliente`(uniqueId, nome, data_nasc, telefone, whatsapp, rua, localidade, zipcode, pais, email) VALUES (:uniqueId, :nome, :data_nasc, :telefone, :whatsapp, :rua, :localidade, :zipcode, :pais, :email)';
         //prepare statement
         $stmt = $this->conn->prepare($query);
         //clean data
+        $email = htmlspecialchars(strip_tags($obj->email));
         $pais = htmlspecialchars(strip_tags($obj->pais));
         $zipcode = htmlspecialchars(strip_tags($obj->zipcode));
         $localidade = htmlspecialchars(strip_tags($obj->localidade));
@@ -94,6 +95,7 @@ class Client
         $stmt->bindParam(':data_nasc', $data_nasc);
         $stmt->bindParam(':uniqueId', $this->uniqueId);
         $stmt->bindParam(':nome', $this->name);
+        $stmt->bindParam(':email', $email);
 
         if ($stmt->execute()) {
             return true;
