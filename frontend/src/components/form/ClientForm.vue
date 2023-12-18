@@ -2,7 +2,10 @@
   <div class="main-form">
     <!--CLIENT INFO PROPS-->
     <div class="info-form">
-      <p class="mb-5"><strong>Nome:&nbsp;</strong> {{ props.client.client }}</p>
+      <p class="mb-5">
+        <strong>Nome:&nbsp;</strong><br />
+        {{ props.client.client }}
+      </p>
       <p class="mb-5">
         <strong>Endereço:&nbsp;</strong><br />
         {{ props.client.rua }}<br />

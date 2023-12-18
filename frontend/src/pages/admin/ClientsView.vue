@@ -18,6 +18,7 @@
         label="Data de Nascimento"
         v-model="newClient.data_nasc"
         manual-input
+        mode="single"
       ></va-date-input>
       <va-input class="mb-3 input" label="Rua" v-model="newClient.rua"></va-input>
       <va-input class="mb-3 input" label="Código Postal" v-model="newClient.zipcode"></va-input>
