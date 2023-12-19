@@ -28,7 +28,7 @@
 
   <!--MODAL EDIT CLIENT-->
   <va-modal v-model="showEdit" hide-default-actions :mobile-fullscreen="false">
-    <div class="modal-container-form">
+    <div class="modal-container-form edit-modal">
       <h1>Dados do Cliente</h1>
       <va-input class="mb-3 mt-5 input" label="Nome" v-model="edited.nome"></va-input>
       <va-input class="mb-3 input" label="Email" v-model="edited.email"></va-input>
@@ -46,7 +46,7 @@
       <va-input class="mb-3 input" label="Localidade" v-model="edited.localidade"></va-input>
       <va-input class="mb-3 input" label="País" v-model="edited.pais"></va-input>
     </div>
-    <div class="btn-form-option">
+    <div class="btn-form-option edit-modal-bottom">
       <va-button preset="plain" class="btn-form-cancel" @click="showEdit = false"
         ><span style="font-size: 20px">Cancelar</span></va-button
       >
@@ -261,6 +261,10 @@
     flex-direction: column-reverse;
   }
 
+  .edit-modal-bottom {
+    margin-bottom: 60px;
+  }
+
   .btn-form-cancel {
     height: 50px;
   }
@@ -272,6 +276,10 @@
   .modal-container-form > h1 {
     text-align: center;
     font-size: 20px;
+  }
+
+  .edit-modal {
+    margin-top: 60px;
   }
 
   @media screen and (min-width: 450px) {

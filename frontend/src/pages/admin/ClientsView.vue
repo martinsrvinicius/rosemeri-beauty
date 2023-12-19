@@ -7,7 +7,7 @@
   </div>
 
   <va-modal v-model="showAdd" hide-default-actions :mobile-fullscreen="false">
-    <div class="modal-container-form">
+    <div class="modal-container-form add-modal">
       <h1>Novo Cliente</h1>
       <va-input class="mb-3 mt-5 input" label="Nome" v-model="newClient.nome"></va-input>
       <va-input class="mb-3 input" label="Email" v-model="newClient.email"></va-input>
@@ -205,7 +205,13 @@
     overflow: hidden;
     text-wrap: wrap;
   }
+  .add-modal {
+    margin-top: 60px;
+  }
 
+  .btn-form-option {
+    margin-bottom: 60px;
+  }
   @media screen and (min-width: 450px) {
     .name-container {
       display: flex;
