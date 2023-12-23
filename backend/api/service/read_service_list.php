@@ -22,6 +22,8 @@ if ($num > 0) {
             'uniqueId' => $uniqueId,
             'titulo' => $titulo,
             'duracao' => $duracao,
+            'descricao' => $descricao,
+            'preco' => $preco,
         );
         array_push($service_arr['service'], $service);
     }

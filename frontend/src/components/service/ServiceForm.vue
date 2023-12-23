@@ -1,23 +1,20 @@
 <template>
   <div class="main-form">
-    <!--CLIENT INFO PROPS-->
+    <!--SERVICE INFO PROPS-->
     <div class="info-form">
       <p class="mb-5">
-        <strong>Nome:&nbsp;</strong><br />
-        {{ props.client.client }}
+        <strong>Título:&nbsp;</strong><br />
+        {{ props.service.titulo }}
       </p>
       <p class="mb-5">
-        <strong>Endereço:&nbsp;</strong><br />
-        {{ props.client.rua }}<br />
-        {{ props.client.localidade }}, <br />{{ props.client.zipcode }} {{ props.client.pais }}
+        <strong>Descrição:&nbsp;</strong><br />
+        {{ props.service.descricao }}
       </p>
       <p class="mb-5">
-        <strong>Email:&nbsp;</strong><br />
-        {{ props.client.email }}
+        <strong>Duração:&nbsp;</strong><br />
+        {{ props.service.duracao }} minutos
       </p>
-      <p class="mb-5"><strong>Data de Nascimento:&nbsp;</strong> {{ props.client.data_nasc }}</p>
-      <p class="mb-5"><strong>Telefone:&nbsp;</strong> {{ props.client.telefone }}</p>
-      <p class="mb-5"><strong>Whatsapp:&nbsp;</strong> {{ props.client.whatsapp }}</p>
+      <p class="mb-2"><strong>Preço:&nbsp;</strong> € {{ props.service.preco }}</p>
     </div>
     <div class="btn-group-form">
       <va-button style="height: 50%" preset="plain" icon="edit" @click="showEdit = true"></va-button>
@@ -29,27 +26,32 @@
   <!--MODAL EDIT CLIENT-->
   <va-modal v-model="showEdit" hide-default-actions :mobile-fullscreen="false">
     <div class="modal-container-form edit-modal">
-      <h1>Dados do Cliente</h1>
-      <va-input class="mb-3 mt-5 input" label="Nome" v-model="edited.nome"></va-input>
-      <va-input class="mb-3 input" label="Email" v-model="edited.email"></va-input>
-      <va-input class="mb-3 input" label="Telefone" v-model="edited.telefone"></va-input>
-      <va-input class="mb-3 input" label="Whatsapp" v-model="edited.whatsapp"></va-input>
-      <va-date-input
-        class="mb-3 input"
-        label="Data de Nascimento"
-        v-model="edited.data_nasc"
-        mode="single"
-      ></va-date-input>
-      <va-input class="mb-3 input" label="Rua" v-model="edited.rua"></va-input>
-      <va-input class="mb-3 input" label="Código Postal" v-model="edited.zipcode"></va-input>
-      <va-input class="mb-3 input" label="Localidade" v-model="edited.localidade"></va-input>
-      <va-input class="mb-3 input" label="País" v-model="edited.pais"></va-input>
+      <h1>Dados do Serviço</h1>
+      <va-input class="mb-3 mt-5 input" label="Título" v-model="edited.titulo"></va-input>
+      <va-input class="mb-3 input" :max-length="100" counter label="Descrição" v-model="edited.descricao">
+        <template #counter="{ valueLength, maxLength }">
+          <b
+            class="ml-auto"
+            :style="{
+              color: valueLength > maxLength ? 'var(--va-danger)' : 'var(--va-success)',
+            }"
+          >
+            {{ maxLength - valueLength }}
+          </b>
+        </template>
+      </va-input>
+      <va-input type="number" class="mb-3 input" label="Duração" v-model="edited.duracao">
+        <template #appendInner> minutos </template></va-input
+      >
+      <va-input class="mb-3 input" label="Preço" v-model="edited.preco">
+        <template #prependInner> € </template>
+      </va-input>
     </div>
     <div class="btn-form-option edit-modal-bottom">
       <va-button preset="plain" class="btn-form-cancel" @click="showEdit = false"
         ><span style="font-size: 20px">Cancelar</span></va-button
       >
-      <va-button class="btn-form-guardar" @click="updateClientInfo"
+      <va-button class="btn-form-guardar" @click="updateServiceInfo"
         ><span style="font-size: 20px">Guardar</span></va-button
       >
     </div>
@@ -58,14 +60,14 @@
   <!--MODAL DELETE CLIENT-->
   <va-modal v-model="showDelete" hide-default-actions :mobile-fullscreen="false">
     <div class="modal-container-form">
-      <h1 class="mb-5">Eliminar Cliente</h1>
-      <p class="mt-5">Tem certeza que deseja eliminar o cliente?</p>
+      <h1 class="mb-5">Eliminar Serviço</h1>
+      <p class="mt-5">Tem certeza que deseja eliminar o serviço?</p>
     </div>
     <div class="btn-form-option">
       <va-button preset="plain" class="btn-form-cancel" @click="showDelete = false"
         ><span style="font-size: 20px">Cancelar</span></va-button
       >
-      <va-button class="btn-form-guardar" @click="deleteClient"
+      <va-button class="btn-form-guardar" @click="deleteService"
         ><span style="font-size: 20px">Eliminar</span></va-button
       >
     </div>
@@ -80,74 +82,46 @@
   const { init: initToast } = useToast()
   const showEdit = ref()
   const showDelete = ref()
-  const props = defineProps(['client'])
+  const props = defineProps(['service'])
   const emit = defineEmits(['update'])
 
   const edited = reactive({
     uniqueId: '',
-    nome: '',
-    email: '',
-    telefone: '',
-    whatsapp: '',
-    data_nasc: new Date(),
-    rua: '',
-    zipcode: '',
-    localidade: '',
-    pais: '',
+    titulo: '',
+    descricao: '',
+    preco: 0,
+    duracao: 0,
   })
 
   onMounted(() => {
     //Initiate value inside inputs
-    edited.uniqueId = props.client.uniqueId
-    if (props.client.client !== null) {
-      edited.nome = props.client.client
+    edited.uniqueId = props.service.uniqueId
+    if (props.service.titulo !== null) {
+      edited.titulo = props.service.titulo
     }
-    if (props.client.email !== null) {
-      edited.email = props.client.email
+    if (props.service.descricao !== null) {
+      edited.descricao = props.service.descricao
     }
-    if (props.client.telefone !== null) {
-      edited.telefone = props.client.telefone
+    if (props.service.preco !== null) {
+      edited.preco = props.service.preco
     }
-    if (props.client.whatsapp !== null) {
-      edited.whatsapp = props.client.whatsapp
-    }
-    if (props.client.data_nasc !== null) {
-      edited.data_nasc = new Date(props.client.data_nasc)
-    }
-    if (props.client.rua !== null) {
-      edited.rua = props.client.rua
-    }
-    if (props.client.zipcode !== null) {
-      edited.zipcode = props.client.zipcode
-    }
-    if (props.client.zipcode !== null) {
-      edited.localidade = props.client.localidade
-    }
-    if (props.client.zipcode !== null) {
-      edited.pais = props.client.pais
+    if (props.service.duracao !== null) {
+      edited.duracao = props.service.duracao
     }
   })
 
-  //UPDATE CLIENT FULL INFO
-  async function updateClientInfo() {
-    let day = edited.data_nasc.getDate()
-    let month = edited.data_nasc.getMonth() + 1
-    let year = edited.data_nasc.getFullYear()
+  //UPDATE SERVICE FULL INFO
+  async function updateServiceInfo() {
     let data = JSON.stringify({
       uniqueId: edited.uniqueId,
-      nome: edited.nome,
-      email: edited.email,
-      telefone: edited.telefone,
-      whatsapp: edited.whatsapp,
-      data_nasc: year + '-' + month + '-' + day,
-      rua: edited.rua,
-      zipcode: edited.zipcode,
-      localidade: edited.localidade,
-      pais: edited.pais,
+      titulo: edited.titulo,
+      descricao: edited.descricao,
+      duracao: edited.duracao,
+      preco: edited.preco,
     })
     await axios
       .request({
-        url: 'https://rosemeri-beauty.vinim.eu/api/clients/update_client.php',
+        url: 'https://rosemeri-beauty.vinim.eu/api/service/update_service.php',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -159,11 +133,11 @@
         showEdit.value = false
         emit('update', true)
         if (res.data) {
-          let msg = 'Cliente atualizado com sucesso'
+          let msg = 'Serviço atualizado com sucesso'
           let color = '#008000'
           notify(msg, color)
         } else {
-          let msg = 'Cliente não atualizado'
+          let msg = 'Serviço não atualizado'
           let color = '#ff0000'
           notify(msg, color)
         }
@@ -172,11 +146,11 @@
   }
 
   //DELETE CLIENT
-  async function deleteClient() {
-    let data = JSON.stringify({ uniqueId: props.client.uniqueId })
+  async function deleteService() {
+    let data = JSON.stringify({ uniqueId: props.service.uniqueId })
     await axios
       .request({
-        url: 'https://rosemeri-beauty.vinim.eu/api/clients/delete_client.php',
+        url: 'https://rosemeri-beauty.vinim.eu/api/service/delete_service.php',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -188,11 +162,11 @@
         showDelete.value = false
         emit('update', true)
         if (res.data) {
-          let msg = 'Cliente eliminado com sucesso'
+          let msg = 'Serviço eliminado com sucesso'
           let color = '#008000'
           notify(msg, color)
         } else {
-          let msg = 'Cliente não eliminado'
+          let msg = 'Serviço não eliminado'
           let color = '#ff0000'
           notify(msg, color)
         }
@@ -307,6 +281,7 @@
     .edit-modal-bottom {
       margin-bottom: 0px;
     }
+
     .edit-modal {
       margin-top: 0px;
     }

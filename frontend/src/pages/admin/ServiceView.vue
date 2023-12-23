@@ -1,5 +1,5 @@
 <template>
-  <h1 class="clients">Clientes</h1>
+  <h1 class="clients">Serviços</h1>
   <div class="add-container">
     <va-button class="settings" preset="plain" @click="showAdd = !showAdd">
       <va-icon name="add" size="large"></va-icon>Novo
@@ -8,21 +8,26 @@
 
   <va-modal v-model="showAdd" hide-default-actions :mobile-fullscreen="false">
     <div class="modal-container-form add-modal">
-      <h1>Novo Cliente</h1>
-      <va-input class="mb-3 mt-5 input" label="Nome" v-model="newClient.nome"></va-input>
-      <va-input class="mb-3 input" label="Email" v-model="newClient.email"></va-input>
-      <va-input class="mb-3 input" label="Telefone" v-model="newClient.telefone"></va-input>
-      <va-input class="mb-3 input" label="Whatsapp" v-model="newClient.whatsapp"></va-input
-      ><va-date-input
-        class="mb-3 input"
-        label="Data de Nascimento"
-        v-model="newClient.data_nasc"
-        mode="single"
-      ></va-date-input>
-      <va-input class="mb-3 input" label="Rua" v-model="newClient.rua"></va-input>
-      <va-input class="mb-3 input" label="Código Postal" v-model="newClient.zipcode"></va-input>
-      <va-input class="mb-3 input" label="Localidade" v-model="newClient.localidade"></va-input>
-      <va-input class="mb-3 input" label="País" v-model="newClient.pais"></va-input>
+      <h1>Novo Serviço</h1>
+      <va-input class="mb-3 mt-5 input" label="Título" v-model="newService.titulo"></va-input>
+      <va-input class="mb-3 input" label="Descrição" :max-length="100" counter v-model="newService.descricao">
+        <template #counter="{ valueLength, maxLength }">
+          <b
+            class="ml-auto"
+            :style="{
+              color: valueLength > maxLength ? 'var(--va-danger)' : 'var(--va-success)',
+            }"
+          >
+            {{ maxLength - valueLength }}
+          </b>
+        </template>
+      </va-input>
+      <va-input type="number" class="mb-3 input" label="Preço" v-model="newService.preco">
+        <template #prependInner> € </template>
+      </va-input>
+      <va-input type="number" class="mb-3 input" label="Duração em Minutos" v-model="newService.duracao">
+        <template #appendInner> minutos </template>
+      </va-input>
     </div>
     <div class="btn-form-option">
       <va-button preset="plain" class="btn-form-cancel" @click="showAdd = false"
@@ -40,9 +45,9 @@
         </div>
       </template>
 
-      <template #cell(client)="{ rowIndex }">
+      <template #cell(titulo)="{ rowIndex }">
         <div class="name-container">
-          <span>{{ items[rowIndex].client }}</span>
+          <span>{{ items[rowIndex].titulo }}</span>
         </div>
       </template>
 
@@ -52,7 +57,7 @@
         </va-button>
       </template>
       <template #expandableRow="{ rowData }">
-        <ClientForm :client="rowData" @update="getClientFullInfo" />
+        <ServiceForm :service="rowData" @update="getServiceFull" />
       </template>
     </va-data-table>
   </va-card>
@@ -60,51 +65,39 @@
 
 <script setup lang="ts">
   import { ref, onMounted, reactive } from 'vue'
-  import ClientForm from '../../components/form/ClientForm.vue'
+  import ServiceForm from '../../components/service/ServiceForm.vue'
   import axios from 'axios'
   import { useToast } from 'vuestic-ui'
 
   const { init: initToast } = useToast()
   const showAdd = ref()
-  const columns = [{ key: 'Id' }, { key: 'client', label: 'Nome' }, { key: 'telefone', label: 'Telefone' }, { key: '' }]
+  const columns = [{ key: 'Id' }, { key: 'titulo', label: 'Titulo' }, { key: 'preco', label: 'preco' }, { key: '' }]
 
-  interface IClient {
-    nome: string
-    email: string
-    telefone: string
-    whatsapp: string
-    data_nasc: Date
-    rua: string
-    zipcode: string
-    localidade: string
-    pais: string
-    nif: number
+  interface IService {
+    titulo: string
+    descricao: string
+    preco: number
+    duracao: number
   }
 
-  const items = ref<IClient | any>()
+  const items = ref<IService | any>()
 
-  const newClient = reactive({
-    nome: '',
-    email: '',
-    telefone: '',
-    whatsapp: '',
-    data_nasc: new Date(),
-    rua: '',
-    zipcode: '',
-    localidade: '',
-    pais: '',
-    nif: 0,
-  } as IClient)
+  const newService = reactive({
+    titulo: '',
+    descricao: '',
+    preco: 0,
+    duracao: 0,
+  } as IService)
 
   onMounted(() => {
-    getClientFullInfo()
+    getServiceFull()
   })
 
   //GET CLIENTS FULL INFO
-  async function getClientFullInfo() {
+  async function getServiceFull() {
     await axios
       .request({
-        url: 'https://rosemeri-beauty.vinim.eu/api/clients/read_clients_full.php',
+        url: 'https://rosemeri-beauty.vinim.eu/api/service/read_service_list.php',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -112,32 +105,19 @@
         maxBodyLength: Infinity,
       })
       .then((res) => {
-        // console.log("clients: ", res.data.clientsFull)
+        //console.log("clients: ", res.data.service)
         items.value = []
-        items.value = res.data.clientsFull
+        items.value = res.data.service
       })
       .catch()
   }
 
-  //Create New Client
+  //Create New Service
   async function addNew() {
-    let day = newClient.data_nasc.getDate()
-    let month = newClient.data_nasc.getMonth() + 1
-    let year = newClient.data_nasc.getFullYear()
-    let data = JSON.stringify({
-      nome: newClient.nome,
-      email: newClient.email,
-      telefone: newClient.telefone,
-      whatsapp: newClient.whatsapp,
-      data_nasc: year + '-' + month + '-' + day,
-      rua: newClient.rua,
-      zipcode: newClient.zipcode,
-      localidade: newClient.localidade,
-      pais: newClient.pais,
-    })
+    let data = JSON.stringify(newService)
     await axios
       .request({
-        url: 'https://rosemeri-beauty.vinim.eu/api/clients/create_client_full.php',
+        url: 'https://rosemeri-beauty.vinim.eu/api/service/create_service_full.php',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -149,15 +129,15 @@
         showAdd.value = false
         console.log('Criado: ', res.data[0])
         if (res.data) {
-          let msg = 'Cliente criado com sucesso'
+          let msg = 'Serviço criado com sucesso'
           let color = '#008000'
           notify(msg, color)
         } else {
-          let msg = 'Não foi possível criar o Cliente'
+          let msg = 'Não foi possível criar o Serviço'
           let color = '#ff0000'
           notify(msg, color)
         }
-        getClientFullInfo()
+        getServiceFull()
       })
       .catch()
   }
@@ -210,6 +190,7 @@
     overflow: hidden;
     text-wrap: wrap;
   }
+
   .add-modal {
     margin-top: 60px;
   }
@@ -217,6 +198,7 @@
   .btn-form-option {
     margin-bottom: 60px;
   }
+
   @media screen and (min-width: 450px) {
     .name-container {
       display: flex;
@@ -233,6 +215,7 @@
     .add-modal {
       margin-top: 0px;
     }
+
     .btn-form-option {
       margin-bottom: 0px;
     }

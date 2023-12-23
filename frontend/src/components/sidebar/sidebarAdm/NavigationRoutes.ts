@@ -33,6 +33,13 @@ export default {
         icon: 'material-icons-group',
       },
     },
+    {
+      name: 'services',
+      displayName: 'Serviços',
+      meta: {
+        icon: 'material-icons-drag_indicator',
+      },
+    },
     /** {
       name: 'statistics',
       displayName: 'menu.statistics',
