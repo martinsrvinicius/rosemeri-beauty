@@ -24,6 +24,7 @@ if ($num > 0) {
             'duracao' => $duracao,
             'descricao' => $descricao,
             'preco' => $preco,
+            'foto' => empty($foto) ? '' : trim(base64_encode($foto))
         );
         array_push($service_arr['service'], $service);
     }

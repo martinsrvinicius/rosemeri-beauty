@@ -3,6 +3,10 @@
     <!--SERVICE INFO PROPS-->
     <div class="info-form">
       <p class="mb-5">
+        <strong>Foto:&nbsp;</strong><br />
+        <img :class="[isMobile ? 'mobile' : 'wide']" :src="`${props.service.foto}`" />
+      </p>
+      <p class="mb-5">
         <strong>Título:&nbsp;</strong><br />
         {{ props.service.titulo }}
       </p>
@@ -27,6 +31,11 @@
   <va-modal v-model="showEdit" hide-default-actions :mobile-fullscreen="false">
     <div class="modal-container-form edit-modal">
       <h1>Dados do Serviço</h1>
+      <va-file-upload file-types="jpg,png,heif,jpeg" type="gallery" class="mb-3 mt-5 input" label="Foto" v-model="foto"
+        ><div class="custom-upload-file-area">
+          <va-button>Alterar foto</va-button>
+        </div></va-file-upload
+      >
       <va-input class="mb-3 mt-5 input" label="Título" v-model="edited.titulo"></va-input>
       <va-input class="mb-3 input" :max-length="100" counter label="Descrição" v-model="edited.descricao">
         <template #counter="{ valueLength, maxLength }">
@@ -76,16 +85,19 @@
 
 <script setup lang="ts">
   import axios from 'axios'
-  import { ref, onMounted, reactive } from 'vue'
+  import { ref, onMounted, reactive, watch } from 'vue'
   import { useToast } from 'vuestic-ui'
 
   const { init: initToast } = useToast()
   const showEdit = ref()
   const showDelete = ref()
+  const foto = ref()
+  const isMobile = ref()
   const props = defineProps(['service'])
   const emit = defineEmits(['update'])
 
   const edited = reactive({
+    foto: '',
     uniqueId: '',
     titulo: '',
     descricao: '',
@@ -94,6 +106,10 @@
   })
 
   onMounted(() => {
+    //Get window size
+    if (window.innerWidth <= 450) {
+      isMobile.value = true
+    }
     //Initiate value inside inputs
     edited.uniqueId = props.service.uniqueId
     if (props.service.titulo !== null) {
@@ -110,20 +126,54 @@
     }
   })
 
+  watch(foto, () => {
+    updatePhoto(foto.value)
+  })
+
+  //UPDATE SERVICE PHOTO
+  async function updatePhoto(foto: any) {
+    edited.foto = foto[0]
+    let data = new FormData()
+    data.append('uniqueId', String(edited.uniqueId))
+    data.append('foto', edited.foto)
+    await axios
+      .request({
+        url: 'https://rosemeri-beauty.vinim.eu/api/service/update_service_photo.php',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        method: 'POST',
+        maxBodyLength: Infinity,
+        data: data,
+      })
+      .then((res) => {
+        emit('update', true)
+        if (res.data) {
+          let msg = 'Foto atualizada com sucesso'
+          let color = '#008000'
+          notify(msg, color)
+        } else {
+          let msg = 'Foto não atualizada'
+          let color = '#ff0000'
+          notify(msg, color)
+        }
+      })
+      .catch()
+  }
+
   //UPDATE SERVICE FULL INFO
   async function updateServiceInfo() {
-    let data = JSON.stringify({
-      uniqueId: edited.uniqueId,
-      titulo: edited.titulo,
-      descricao: edited.descricao,
-      duracao: edited.duracao,
-      preco: edited.preco,
-    })
+    let data = new FormData()
+    data.append('titulo', edited.titulo)
+    data.append('descricao', edited.descricao)
+    data.append('preco', String(edited.preco))
+    data.append('duracao', String(edited.duracao))
+    data.append('uniqueId', String(edited.uniqueId))
     await axios
       .request({
         url: 'https://rosemeri-beauty.vinim.eu/api/service/update_service.php',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'multipart/form-data',
         },
         method: 'POST',
         maxBodyLength: Infinity,
@@ -253,6 +303,14 @@
 
   .edit-modal {
     margin-top: 60px;
+  }
+
+  .mobile {
+    width: 70%;
+  }
+
+  .wide {
+    height: 300px;
   }
 
   @media screen and (min-width: 450px) {

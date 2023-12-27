@@ -9,6 +9,13 @@
   <va-modal v-model="showAdd" hide-default-actions :mobile-fullscreen="false">
     <div class="modal-container-form add-modal">
       <h1>Novo Serviço</h1>
+      <va-file-upload
+        file-types="jpg,png,heif,jpeg"
+        type="gallery"
+        class="mb-3 mt-5 input"
+        label="Foto"
+        v-model="foto"
+      ></va-file-upload>
       <va-input class="mb-3 mt-5 input" label="Título" v-model="newService.titulo"></va-input>
       <va-input class="mb-3 input" label="Descrição" :max-length="100" counter v-model="newService.descricao">
         <template #counter="{ valueLength, maxLength }">
@@ -71,9 +78,11 @@
 
   const { init: initToast } = useToast()
   const showAdd = ref()
+  const foto = ref([])
   const columns = [{ key: 'Id' }, { key: 'titulo', label: 'Titulo' }, { key: 'preco', label: 'preco' }, { key: '' }]
 
   interface IService {
+    foto: any
     titulo: string
     descricao: string
     preco: number
@@ -83,6 +92,7 @@
   const items = ref<IService | any>()
 
   const newService = reactive({
+    foto: '',
     titulo: '',
     descricao: '',
     preco: 0,
@@ -105,21 +115,34 @@
         maxBodyLength: Infinity,
       })
       .then((res) => {
-        //console.log("clients: ", res.data.service)
+        //console.log("Serviços: ", res.data.service)
         items.value = []
         items.value = res.data.service
+
+        for (let i = 0; i < res.data.service.length; i++) {
+          if (res.data.service[i].foto) {
+            items.value[i].foto = `data:image/*;base64,` + res.data.service[i].foto
+          }
+        }
       })
       .catch()
   }
 
-  //Create New Service
+  //Create New Service FormData
   async function addNew() {
-    let data = JSON.stringify(newService)
+    newService.foto = foto.value[0]
+    let data = new FormData()
+    data.append('foto', foto.value[0])
+    data.append('titulo', newService.titulo)
+    data.append('descricao', newService.descricao)
+    data.append('preco', String(newService.preco))
+    data.append('duracao', String(newService.duracao))
+    // new Response(data).text().then(console.log);
     await axios
       .request({
         url: 'https://rosemeri-beauty.vinim.eu/api/service/create_service_full.php',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'multipart/form-data',
         },
         method: 'POST',
         maxBodyLength: Infinity,
@@ -127,7 +150,7 @@
       })
       .then((res) => {
         showAdd.value = false
-        console.log('Criado: ', res.data[0])
+        //console.log('Criado: ', res.data)
         if (res.data) {
           let msg = 'Serviço criado com sucesso'
           let color = '#008000'

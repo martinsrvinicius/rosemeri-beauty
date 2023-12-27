@@ -71,7 +71,8 @@
       .then((res) => {
         console.log('data', res.data.username)
         if (res.data.adm == 1) {
-          router.push({ name: 'page-1' })
+          //  router.push({ name: 'page-1' })
+          router.push({ name: 'calendar-cal' })
         } else {
           router.push({ name: 'home-user' })
         }

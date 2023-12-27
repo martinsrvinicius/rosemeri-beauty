@@ -11,6 +11,7 @@ class Service
     public $descricao;
     public $preco;
     public $duracao;
+    public $foto;
 
 
 
@@ -24,7 +25,7 @@ class Service
     public function read_list_options()
     {
         //create query
-        $query = 'SELECT uniqueId, titulo, duracao, descricao, preco from `servico`';
+        $query = 'SELECT uniqueId, titulo, duracao, descricao, preco, foto from `servico`';
 
         //prepare statement
         $stmt = $this->conn->prepare($query);
@@ -62,10 +63,11 @@ class Service
     public function create()
     {
         //create query
-        $query = 'INSERT INTO `servico`(uniqueId, titulo, descricao, duracao, preco) VALUES (:uniqueId, :titulo, :descricao, :duracao, :preco)';
+        $query = 'INSERT INTO `servico`(uniqueId, titulo, descricao, duracao, preco, foto) VALUES (:uniqueId, :titulo, :descricao, :duracao, :preco, :foto)';
         //prepare statement
         $stmt = $this->conn->prepare($query);
         //clean data
+        //$this->foto = htmlspecialchars(strip_tags($this->foto));
         $this->preco = htmlspecialchars(strip_tags($this->preco));
         $this->duracao = htmlspecialchars(strip_tags($this->duracao));
         $this->descricao = htmlspecialchars(strip_tags($this->descricao));
@@ -78,6 +80,7 @@ class Service
         $stmt->bindParam(':descricao', $this->descricao);
         $stmt->bindParam(':duracao', $this->duracao);
         $stmt->bindParam(':preco', $this->preco);
+        $stmt->bindParam(':foto', $this->foto);
 
         if ($stmt->execute()) {
             return true;
@@ -121,6 +124,29 @@ class Service
         $stmt->bindParam(':descricao', $this->descricao);
         $stmt->bindParam(':duracao', $this->duracao);
         $stmt->bindParam(':preco', $this->preco);
+
+        //execute the query
+        if ($stmt->execute()) {
+            return true;
+        }
+
+        //print error if something goes wrong
+        printf("Error %s \n", $stmt->error);
+        return false;
+    }
+
+
+    //update service 
+    public function update_photo()
+    {
+        $query = 'UPDATE `servico` SET foto=:foto WHERE uniqueId=:uniqueId';
+
+        //prepare statement
+        $stmt = $this->conn->prepare($query);
+
+        //binding parameters
+        $stmt->bindParam(':uniqueId', $this->uniqueId);
+        $stmt->bindParam(':foto', $this->foto);
 
         //execute the query
         if ($stmt->execute()) {

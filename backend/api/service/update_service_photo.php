@@ -3,7 +3,7 @@
 header('Access-Control-Allow-Origin: *');
 //header('Content-Type: application/json');
 header('Content-Type: multipart/form-data');
-header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Methods: PUT');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access Control-Allow-Methods, Authorization, X-Requested-With');
 
 
@@ -14,8 +14,6 @@ include_once('../../core/initialize.php');
 $service = new Service($db);
 
 //get raw posted data
-//$data = json_decode(file_get_contents('php://input'));
-
 if (count($_FILES) > 0) {
     if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
         $type = $_FILES['foto']['type'];
@@ -25,19 +23,10 @@ if (count($_FILES) > 0) {
     }
 }
 
-$service->titulo = $_POST['titulo'];
-$service->descricao = $_POST['descricao'];
-$service->duracao = $_POST['duracao'];
-$service->preco = $_POST['preco'];
+$service->uniqueId = $_POST['uniqueId'];
 
-/*$service->titulo = $data->titulo;
-$service->descricao = $data->descricao;
-$service->preco = $data->preco;
-$service->duracao = $data->duracao;*/
-
-//echo (  $service->foto);
-//create new service on option list
-if ($service->create()) {
+//Update service info
+if($service->update_photo()) {
     echo json_encode(array($res['status'] = true));
 } else {
     echo json_encode(array($res['status'] = false));
