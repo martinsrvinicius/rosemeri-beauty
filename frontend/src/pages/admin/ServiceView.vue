@@ -75,6 +75,7 @@
   import ServiceForm from '../../components/service/ServiceForm.vue'
   import axios from 'axios'
   import { useToast } from 'vuestic-ui'
+  import { Buffer } from 'buffer'
 
   const { init: initToast } = useToast()
   const showAdd = ref()
@@ -115,13 +116,18 @@
         maxBodyLength: Infinity,
       })
       .then((res) => {
-        //console.log("Serviços: ", res.data.service)
+        console.log('Serviços: ', res.data.service)
         items.value = []
         items.value = res.data.service
 
         for (let i = 0; i < res.data.service.length; i++) {
           if (res.data.service[i].foto) {
-            items.value[i].foto = `data:image/*;base64,` + res.data.service[i].foto
+            //If image blob on database
+            // items.value[i].foto = `data:image/*;base64,` + res.data.service[i].foto
+
+            //Convert base64 image path
+            var b = Buffer.from(res.data.service[i].foto, 'base64')
+            items.value[i].foto = 'https://rosemeri-beauty.vinim.eu/api/service/' + b.toString()
           }
         }
       })
@@ -150,7 +156,7 @@
       })
       .then((res) => {
         showAdd.value = false
-        //console.log('Criado: ', res.data)
+        console.log('Criado: ', res.data)
         if (res.data) {
           let msg = 'Serviço criado com sucesso'
           let color = '#008000'
