@@ -116,11 +116,11 @@
         {
           name: 'new',
           details: {
-            name: 'Gabriel Fernandes',
+            name: 'Ana Glória',
             avatar: 'https://picsum.photos/24?image=1083',
-            message: 'Agendamento de manutenção 1',
+            message: 'Orçamento de maquilhagem',
             title: 'Agendamento',
-            email: 'gabrielf@dv-ti.com',
+            email: 'anagloria.psic@gmail.com',
           },
           unread: true,
           id: 1,
@@ -130,10 +130,9 @@
           details: {
             name: 'Vinicius Martins',
             avatar: 'https://picsum.photos/24?image=1025',
-            message:
-              'Agendamento de manutenção Agendamento de manutençãoAgendamento de manutençãoAgendamento de manutençãoAgendamento de manutençãoAgendamento de manutençãoAgendamento de manutençãoAgendamento de manutençãoAgendamento de manutençãoAgendamento de manutençãoAgendamento de manutençãoAgendamento de manutençãoAgendamento de manutenção',
+            message: 'Orçamento',
             title: 'Agendamento',
-            email: 'viniciusm@dv-ti.com',
+            email: 'vinim.dev@gmail.com',
           },
           unread: true,
           id: 2,
