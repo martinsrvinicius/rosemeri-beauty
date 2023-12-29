@@ -40,8 +40,8 @@
   import { API_PATH } from '../../../stores/global-store'
 
   const { t } = useI18n()
-  const email = ref('')
-  const password = ref('')
+  const email = ref('guest')
+  const password = ref('1234')
   const keepLoggedIn = ref(false)
   const emailErrors = ref<string[]>([])
   const passwordErrors = ref<string[]>([])

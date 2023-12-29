@@ -23,7 +23,7 @@ class Calendar
     public function read()
     {
         //create query
-        $query = 'SELECT agendamento.uniqueId, agendamento.dataHora, cliente.nome, servico.titulo, servico.preco, agendamento.confirm, servico.duracao FROM ((agendamento INNER JOIN cliente ON agendamento.uniqueIdCliente= cliente.uniqueId)
+        $query = 'SELECT agendamento.uniqueId, agendamento.dataHora, cliente.nome, servico.titulo, servico.preco, agendamento.confirm, servico.duracao, servico.foto FROM ((agendamento INNER JOIN cliente ON agendamento.uniqueIdCliente= cliente.uniqueId)
         INNER JOIN servico ON agendamento.uniqueIdServico = servico.uniqueId)';
 
         //prepare statement

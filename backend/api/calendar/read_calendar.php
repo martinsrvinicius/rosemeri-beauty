@@ -26,6 +26,7 @@ if ($num > 0) {
             'confirm' => $confirm,
             'price' => $preco,
             'duracao' => $duracao,
+            'foto' => empty($foto) ? '' : trim(base64_encode($foto)),
         );
         array_push($calendar_arr['calendar'], $event);
     }

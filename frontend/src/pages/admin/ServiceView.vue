@@ -45,7 +45,15 @@
   </va-modal>
 
   <va-card class="main-table">
-    <va-data-table :items="items" :columns="columns" sticky-header :wrapper-size="200" :bench="10" height="500px">
+    <va-data-table
+      :items="items"
+      :columns="columns"
+      sticky-header
+      :wrapper-size="200"
+      :bench="10"
+      height="500px"
+      :loading="loading"
+    >
       <template #cell(Id)="{ rowIndex }">
         <div class="name-container">
           <span>{{ rowIndex + 1 }}</span>
@@ -79,6 +87,7 @@
 
   const { init: initToast } = useToast()
   const showAdd = ref()
+  const loading = ref()
   const foto = ref([])
   const columns = [{ key: 'Id' }, { key: 'titulo', label: 'Titulo' }, { key: 'preco', label: 'preco' }, { key: '' }]
 
@@ -101,6 +110,7 @@
   } as IService)
 
   onMounted(() => {
+    loading.value = true
     getServiceFull()
   })
 
@@ -116,7 +126,7 @@
         maxBodyLength: Infinity,
       })
       .then((res) => {
-        console.log('Serviços: ', res.data.service)
+        //console.log('Serviços: ', res.data.service)
         items.value = []
         items.value = res.data.service
 
@@ -130,6 +140,7 @@
             items.value[i].foto = 'https://rosemeri-beauty.vinim.eu/api/service/' + b.toString()
           }
         }
+        loading.value = false
       })
       .catch()
   }
@@ -156,7 +167,7 @@
       })
       .then((res) => {
         showAdd.value = false
-        console.log('Criado: ', res.data)
+        // console.log('Criado: ', res.data)
         if (res.data) {
           let msg = 'Serviço criado com sucesso'
           let color = '#008000'

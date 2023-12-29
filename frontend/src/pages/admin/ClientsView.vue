@@ -33,7 +33,15 @@
   </va-modal>
 
   <va-card class="main-table">
-    <va-data-table :items="items" :columns="columns" sticky-header :wrapper-size="200" :bench="10" height="500px">
+    <va-data-table
+      :items="items"
+      :columns="columns"
+      sticky-header
+      :wrapper-size="200"
+      :bench="10"
+      height="500px"
+      :loading="loading"
+    >
       <template #cell(Id)="{ rowIndex }">
         <div class="name-container">
           <span>{{ rowIndex + 1 }}</span>
@@ -66,6 +74,7 @@
 
   const { init: initToast } = useToast()
   const showAdd = ref()
+  const loading = ref()
   const columns = [{ key: 'Id' }, { key: 'client', label: 'Nome' }, { key: 'telefone', label: 'Telefone' }, { key: '' }]
 
   interface IClient {
@@ -97,6 +106,7 @@
   } as IClient)
 
   onMounted(() => {
+    loading.value = true
     getClientFullInfo()
   })
 
@@ -115,6 +125,7 @@
         // console.log("clients: ", res.data.clientsFull)
         items.value = []
         items.value = res.data.clientsFull
+        loading.value = false
       })
       .catch()
   }

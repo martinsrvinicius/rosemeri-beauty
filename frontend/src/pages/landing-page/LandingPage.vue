@@ -1,6 +1,8 @@
 <template>
   <div id="background">
-    <p class="txt-background">Registe seu curriculo e comece a trabalhar hoje mesmo</p>
+    <p class="txt-background">
+      <!--<img style="width: 300px; height: 100px; object-fit: contain" src="https://rosemeri-beauty.vinim.eu/assets/logo.png" alt="" />-->
+    </p>
   </div>
 </template>
 

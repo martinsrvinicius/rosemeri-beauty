@@ -9,7 +9,11 @@
           @click="isSidebarMinimized = !isSidebarMinimized"
         />
         <router-link to="/">
-          <img style="width: 134px; height: 35px; object-fit: contain" src="" alt="Logo" />
+          <img
+            style="width: 134px; height: 35px; object-fit: contain"
+            src="https://rosemeri-beauty.vinim.eu/assets/logo.png"
+            alt="Logo"
+          />
         </router-link>
       </div>
     </template>

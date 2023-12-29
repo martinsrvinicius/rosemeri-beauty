@@ -4,7 +4,7 @@
     <div class="auth-layout row align-content-center logo-align">
       <div class="flex xs12 pa-3 justify-center">
         <router-link class="py-5 justify-center d-flex" to="/">
-          <!--<img style="width: 300px; height: 100px; object-fit: contain" src="../assets/logo.png" alt="" />-->
+          <!--<img style="width: 300px; height: 100px; object-fit: contain" src="https://rosemeri-beauty.vinim.eu/assets/logo.png" alt="" />-->
         </router-link>
       </div>
 
@@ -12,6 +12,13 @@
         <div class="d-flex justify-center">
           <va-card class="auth-layout__card">
             <va-card-content>
+              <div class="mb-1" style="display: flex; justify-content: center">
+                <img
+                  style="width: 300px; object-fit: contain"
+                  src="https://rosemeri-beauty.vinim.eu/assets/logo.png"
+                  alt="Logo"
+                />
+              </div>
               <va-tabs v-model="tabIndex" center>
                 <template #tabs>
                   <va-tab name="login">{{ t('auth.login') }}</va-tab>

@@ -8,7 +8,15 @@
     </div>
   </div>
   <div class="service">
-    <img class="img-service" src="../../assets/pestanas.jpg" alt="" />
+    <!--<img class="img-service" src="../../assets/pestanas.jpg" alt="" />-->
+    <img v-if="foto" class="img-service" :src="`${foto}`" alt="foto" />
+    <img
+      v-else
+      class="img-service"
+      style="object-fit: contain"
+      src="https://rosemeri-beauty.vinim.eu/assets/background-service.png"
+      alt="foto"
+    />
     <div style="width: 100%">
       <div class="service-item-flex">
         <p class="item-service-title">Serviço:</p>
@@ -47,11 +55,20 @@
 <script setup lang="ts">
   import { formatFnDisplay } from '../../utils/utils.js'
   import EditEvent from './EditEvent.vue'
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
+  import { Buffer } from 'buffer'
 
   const props = defineProps(['item'])
   const emit = defineEmits(['cancel', 'confirm'])
   const showEdit = ref()
+  const foto = ref()
+
+  onMounted(() => {
+    if (props.item.contentFull.foto) {
+      let b = Buffer.from(props.item.contentFull.foto, 'base64')
+      foto.value = 'https://rosemeri-beauty.vinim.eu/api/service/' + b.toString()
+    }
+  })
 
   function handleConfirm() {
     showEdit.value = false
