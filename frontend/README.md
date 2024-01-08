@@ -76,7 +76,7 @@ alias: {
 
 ---
 
-export const API_PATH = 'https://dvti.dyndns.org/flashwork'
+export const API_PATH = 'https://vinim.eu/rosemeri-beauty'
 
 «««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««
 
